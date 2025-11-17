@@ -1,0 +1,68 @@
+MarioBross 2.2
+
+Time: 100
+Points: 0
+Lives: 3
+
+     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29 
+   ┌————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————┐
+  0┃                                                                             🐻                                         ┃0
+  1┃                                                                                                                        ┃1
+  2┃                                                                                                                        ┃2
+  3┃                                                                                                                        ┃3
+  4┃                                                                                                                        ┃4
+  5┃                        ▓▓▓▓                                                                            ▓▓▓▓            ┃5
+  6┃                                                                                                    ▓▓▓▓▓▓▓▓            ┃6
+  7┃                                                                                                ▓▓▓▓▓▓▓▓▓▓▓▓            ┃7
+  8┃                                                                                            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓            ┃8
+  9┃        ▓▓▓▓        ▓▓▓▓▓▓▓▓▓▓▓▓                                                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓            ┃9
+ 10┃                                                                                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓            ┃10
+ 11┃ 🧍                                                                             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓            ┃11
+ 12┃ 🧍                                 ▓▓▓▓        ▓▓▓▓                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓         🚪 ┃12
+ 13┃▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓┃13
+ 14┃▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓┃14
+   └————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————┘
+     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29 
+
+Command > [DEBUG] Executing: h
+
+Available commands:
+   [a]ction [[R]IGHT | [L]EFT | [U]P | [D]OWN | [S]TOP]+: user performs actions
+   [u]pdate | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
+   [h]elp: print this help message
+   [e]xit: exits the game
+    [a]dd[O]bject <object_description>: adds to the board the object given by object_description
+
+Command > [DEBUG] Executing: help
+
+Available commands:
+   [a]ction [[R]IGHT | [L]EFT | [U]P | [D]OWN | [S]TOP]+: user performs actions
+   [u]pdate | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
+   [h]elp: print this help message
+   [e]xit: exits the game
+    [a]dd[O]bject <object_description>: adds to the board the object given by object_description
+
+Command > [DEBUG] Executing: helP
+
+Available commands:
+   [a]ction [[R]IGHT | [L]EFT | [U]P | [D]OWN | [S]TOP]+: user performs actions
+   [u]pdate | "": user does not perform any action
+   [r]eset [numLevel]: reset the game to initial configuration if not numLevel else load the numLevel map
+   [h]elp: print this help message
+   [e]xit: exits the game
+    [a]dd[O]bject <object_description>: adds to the board the object given by object_description
+
+Command > [DEBUG] Executing: help con argumentosIncorrectos
+
+[ERROR] Error: Unknown command: help con argumentosIncorrectos
+Command > [DEBUG] Executing: n
+
+[ERROR] Error: Unknown command: n
+Command > [DEBUG] Executing: noExiste
+
+[ERROR] Error: Unknown command: noExiste
+Command > [DEBUG] Executing: E
+
+Player leaves the game
