@@ -19,7 +19,6 @@ public class ResetCommand extends AbstractCommand{
 		this.nLevel=-2;
 		this.linea="";
 	}
-	
 	@Override
 	public Command parse(String[] commandWords) {//parse de reset, devuelve reset si coincide la primera palabra del array con el nombre o shortcut, y también guarda el número al que se resetea en caso de haberlo
 		Command c=null;
@@ -35,14 +34,14 @@ public class ResetCommand extends AbstractCommand{
 		}
 		return c;
 	}
-	
+	@Override
 	public void execute(GameModel game, GameView view) {//ejecuta reset
 		if(nLevel>=-1&&nLevel<=2) {//se tienen en cuenta todos los enteros de [-1,2]
 		    game.reset(nLevel);
 		    view.showGame();
 		}
 		else {//el resto de n�meros son inv�lidos
-			if(linea!="") {//la segunda palabra despu�s de reset no es un n�mero
+			if(!"".equals(linea)) {//la segunda palabra despu�s de reset no es un n�mero
 		    	view.showMessage(String.format(Messages.LEVEL_NOT_A_NUMBER_ERROR,linea));
 		    }
 			else if(nLevel!=-2){ //número incorrecto
@@ -53,5 +52,8 @@ public class ResetCommand extends AbstractCommand{
 				view.showGame();
 			}
 		}
+		//reiniciamos los valores de nLevel y linea para la pr�xima vez que se use reset
+		this.nLevel=-2;
+		this.linea="";
 	}	
 }

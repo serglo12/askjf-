@@ -25,7 +25,6 @@ public class GameObjectContainer {
 		boolean encontrado=false;
 		String a="";
 		for(int i=0; i<objects.size()&&!encontrado;++i) {
-			objects.get(i).revivir();
 			if(objects.get(i).isInPosition(pos)) {
 				encontrado=true;
 				a=objects.get(i).getIcon();

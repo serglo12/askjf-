@@ -18,7 +18,4 @@ public class UpdateCommand extends NoParamsCommand{
 			game.update();
 			view.showGame();
 		}
-
-	
-
 }

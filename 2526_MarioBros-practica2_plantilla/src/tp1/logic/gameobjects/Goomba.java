@@ -27,7 +27,7 @@ public class Goomba extends MovingObject{
 	     return canInteract;
 	}
 	
-
+	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el nuevo goomba en caso de ser correcto el formato, y null en otro caso
 		Goomba c=null;
 		if(matchCommandName(objWords[2])) {
@@ -51,7 +51,6 @@ public class Goomba extends MovingObject{
 		dead();
 		game.borrarObject(this);
 	}
-	
 	@Override
 	public  String getIcon() {//devuelve el icono del goomba
 		return Messages.GOOMBA;

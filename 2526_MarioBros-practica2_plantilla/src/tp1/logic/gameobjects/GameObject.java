@@ -1,6 +1,5 @@
 package tp1.logic.gameobjects;
 
-import tp1.logic.Action;
 import tp1.logic.GameWorld;
 import tp1.logic.Position;
 
@@ -10,7 +9,6 @@ public abstract class GameObject implements GameItem{ // TODO
 	private Position pos;
 	private boolean isAlive;
 	protected GameWorld game; 
-	private boolean isSolid;
 	private Position preUpdateMov;
 	private String name;
 	private String shortcut;
@@ -21,7 +19,6 @@ public abstract class GameObject implements GameItem{ // TODO
 		this.isAlive = true;
 		this.pos = pos;
 		this.game = game;
-		isSolid=isSolid();//devuelve true o false segun cual sea el objeto
 	}
 	public GameObject() {}//constructor vacio del objeto
 	
@@ -42,10 +39,10 @@ public abstract class GameObject implements GameItem{ // TODO
 	public void addObject(GameObject obj) {//añade un objeto a la lista de objetos
 		game.addObject(obj);
 	}
-	
-	public boolean isSolid(){//devuelve true si el objeto es solido
-		return isSolid;
-	}
+	@Override
+	public boolean isSolid() {
+		return true;
+	}//devuelve true si el objeto es solido
 	
 	public void revivir() {//revive al objeto
 		isAlive=true;
@@ -110,7 +107,7 @@ public abstract class GameObject implements GameItem{ // TODO
 	public boolean isInPosition(GameItem obj) {//true si estan en la misma posicion
 		return obj.isInPosition(this.pos);
 	}
-	
+	@Override
 	public boolean isInPosition(Position pos) {//true si estan en la  misma posicion
 		return this.pos.comparePos(pos);
 	}
@@ -119,6 +116,7 @@ public abstract class GameObject implements GameItem{ // TODO
 		return obj.isInPosition(this.pos.devolverAbajo());
 	}
  	
+	@Override
 	public boolean isAlive() {//devuelve true si el objeto esta vivo
 		return isAlive;
 	}
@@ -128,39 +126,34 @@ public abstract class GameObject implements GameItem{ // TODO
 	}
 	
 	//todas estas interacciones devuelve falso, y en caso de que dos objetos interactuen se sobreescribe el metodo dentro de la propia clase
-	
+	@Override
 	public boolean receiveInteraction(Land obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean receiveInteraction(Mario obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean receiveInteraction(Goomba obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean receiveInteraction(ExitDoor obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean receiveInteraction(Mushroom obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean receiveInteraction(Box obj) {
 		return false;
 	}
-	
+	@Override
 	public boolean interactWith(GameItem other) {
 	     return false;
 	}	
 	
 	public abstract String getIcon();
-
-	// Not mandatory but recommended
-	protected void move(Action dir) {
-		// TODO Auto-generated method stub
-	}
 }

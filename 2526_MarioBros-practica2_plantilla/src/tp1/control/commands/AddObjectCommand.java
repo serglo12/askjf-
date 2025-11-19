@@ -14,7 +14,7 @@ public class AddObjectCommand extends AbstractCommand{
 	    public AddObjectCommand() {
 			super(NAME, SHORTCUT, DETAILS, HELP);
 		}
-	    
+	    @Override
 	    public Command parse(String[] commandWords) {//parse de addobject, devuelve addobject si coincide la primera palabra del array con el nombre o shortcut 
 			Command c=null;
 			if(matchCommandName(commandWords[0])) {
@@ -23,7 +23,7 @@ public class AddObjectCommand extends AbstractCommand{
 			}
 			return c;
 	    }
-	    
+	    @Override
 	    public void execute(GameModel game, GameView view) {//si es una sola palabra da fallo, en otro caso se llama a game, que a su vez llama a gameobjectfactory, donde se ve si es correcto o no
 	    	if(commandWords2.length==1) {//si no hay nada despu�s de action da fallo
 				view.showError(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);

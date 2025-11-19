@@ -13,17 +13,11 @@ public class Land extends GameObject{
 	public Land() {//constructor vacio de land, se llama al constructor por defecto de gameobject(esta creado)
 		cambiarNombres(NAME,SHORTCUT);
 	}
-
-	@Override
-	public boolean isSolid(){//land es solido
-		return true;
-	}
-	
 	@Override
 	public String getIcon() {//devuelve el icono de tierra
 		return Messages.LAND;
 	}
-	
+	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el nuevo land en caso de ser el formato correcto, en otro caso devuelve null
 		GameObject c=null;
 		if(matchCommandName(objWords[2])&&objWords.length==3) {

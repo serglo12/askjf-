@@ -9,6 +9,7 @@ public class GameObjectFactory {
 	
 	public GameObjectFactory() {
 	}
+	
 	private static final List<GameObject> availableObjects = Arrays.asList( //todos los posibles objetos
 			new Land(),
 			new ExitDoor(),

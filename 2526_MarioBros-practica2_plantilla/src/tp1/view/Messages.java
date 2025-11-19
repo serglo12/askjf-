@@ -107,7 +107,9 @@ public class Messages {
     public static final String COMMAND_ADD_OBJECT_NAME = "addObject";
     public static final String COMMAND_ADD_OBJECT_SHORTCUT = "aO";
     public static final String COMMAND_ADD_OBJECT_DETAILS = "[a]dd[O]bject <object_description>";
-    public static final String COMMAND_ADD_OBJECT_HELP = "<object_description>: adds to the board the object given by object_description.\n"+"<object_description> = (col,row) objName [dir [BIG|SMALL]]. Ej. (12,3) Mario LEFT SMALL";
+    public static final String COMMAND_ADD_OBJECT_HELP = """
+                                                         <object_description>: adds to the board the object given by object_description.
+                                                         <object_description> = (row,col) objName [dir [BIG|SMALL]]. Ej. (12,3) Mario LEFT SMALL""";
     		
     
     

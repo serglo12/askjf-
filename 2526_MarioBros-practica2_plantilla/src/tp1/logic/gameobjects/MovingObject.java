@@ -7,7 +7,6 @@ import tp1.view.Messages;;
 public abstract class MovingObject extends GameObject{
 	
 	private Action mov;//Enum p�blico de game con el que guardar el estado de Movimiento actual
-	private boolean big;
 	private Action preUpdateMov;
 	protected static final String left=Messages.LEFT;
 	protected static final String left_shortcut=Messages.LEFT_SHORTCUT;
@@ -16,13 +15,11 @@ public abstract class MovingObject extends GameObject{
 	
 	public MovingObject(GameWorld game, Position pos) {//constructor de movingobject
 		super(game, pos);
-		big=false;
 		mov=inicioMov();
 	}
 	
 	public MovingObject(GameWorld game, Position pos, Action mov2) {//constructor para addObjectCommand en caso de que se le mande un movimiento
 		super(game, pos);
-		big=false;
 		this.mov=mov2;
 	}
 	
@@ -50,17 +47,10 @@ public abstract class MovingObject extends GameObject{
 		return false;
 	}
 	
-	protected boolean isUp() {//true si se esta moviendo hacia arriba
+	boolean isUp() {//true si se esta moviendo hacia arriba
 		return mov==Action.UP;
 	}
-	
-	public boolean big() {//devuelve el atributo de big
-		return big;
-	}
 		
-	public void cambiarTamano() {//cambia el tamano
-		big=!big;
-	}
 	
 	boolean compararMov(Action mov2) {//compara el atributo con el movimiento actual
 		return mov2==this.mov;
@@ -79,14 +69,13 @@ public abstract class MovingObject extends GameObject{
 		this.preUpdateMov=this.mov;
 	}
 
-	public boolean isFalling() { //devuelve true si esta cayendo
+	boolean isFalling() { //devuelve true si esta cayendo
 		return mov==Action.DOWN;
 	}
 	
 	private void moverIzquierda() {//se mueve a la izquierda
 		izquierda();
 		cambiarMov(Action.LEFT);
-
 	}
 	
 	protected void moverAbajo() {//se mueve abajo
@@ -95,17 +84,9 @@ public abstract class MovingObject extends GameObject{
 	
 	protected void LEFT() {//toda la logica para moverse hacia la izquierda, si no hay nada, se mueve normal, y si hay algo y tiene el icono de movimiento hacia la izquierda, se cambia al icono de movimiento hacia la derecha. Ademas, se tiene en cuenta la cabeza cuando es grande a la hora de moverse
 		if(puedoIzquierda()) {// si la izquierda no esta fuera de tablero y no hay tierra
-			if(big()&&puedoArribaIzquierda()) {
-				moverIzquierda();
-			}
-			else if(!big()) {
-				moverIzquierda();
-			}
-			else cambiarMov(Action.RIGHT);
+			moverIzquierda();
 		}
-		else {
-			cambiarMov(Action.RIGHT);
-		}
+		else cambiarMov(Action.RIGHT);
 	}
 	
 	
@@ -116,13 +97,7 @@ public abstract class MovingObject extends GameObject{
 	
 	protected void RIGHT() {//toda la logica para moverse hacia la derecha, si no hay nada, se mueve normal, y si hay algo y tiene el icono de movimiento hacia la derecha, se cambia al icono de movimiento hacia la izquierda. Ademas, se tiene en cuenta la cabeza cuando es grande a la hora de moverse
 		if(puedoDerecha()) {// si la izquierda no esta fuera de tablero y no hay tierra
-			if(big()&&puedoArribaDerecha()) {
-				moverDerecha();
-			}
-			else if(!big()) {
-				moverDerecha();
-			}
-			else cambiarMov(Action.LEFT);
+			moverDerecha();
 		}
 		else {
 			cambiarMov(Action.LEFT);
@@ -133,7 +108,6 @@ public abstract class MovingObject extends GameObject{
 		dead();
 		game.borrarObject(this);
 	}
-	
 	
 	protected void movimientoAutomatico() {//el movimiento automatico
 		if(!puedoAbajo()&&!abajoFueraDeTablero()) { //si abajo no esta fuera de tablero y hay tierra 

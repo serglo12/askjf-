@@ -32,6 +32,7 @@ public class Mushroom extends MovingObject{
 	     return canInteract;
 	}
 	
+	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el objeto si el formato es correcto, en caso contrario se devuelve null
 		Mushroom c=null;
 		if(matchCommandName(objWords[2])) {
@@ -44,12 +45,11 @@ public class Mushroom extends MovingObject{
 		return c;
 	}
 	
-	
 	@Override
 	public String getIcon() {//devuelve el icono del mushroom
 		return Messages.MUSHROOM;
 	}
-	
+
 	@Override
 	protected Action inicioMov() {//por defecto empieza moviendose hacia la derecha
 		return Action.RIGHT;
@@ -58,5 +58,6 @@ public class Mushroom extends MovingObject{
 	@Override
 	public void update() {//es el movimiento automatico de mushroom
 		movimientoAutomatico();
+		if(compararMov(Action.STOP))cambiarMov(inicioMov());//cuando se crea el mushroom porque mario le ha dado a la caja se inicia como stop, pues en la primera vuelta no quiero que se mueva, y así se cambia justo después de no moverse 
 	}
 }

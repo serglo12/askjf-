@@ -31,19 +31,13 @@ public class Box extends GameObject{
 	     return canInteract;
 	}
 	
-	@Override
-	public boolean isSolid(){//es solido
-		return true;
-	}
-	
 	public void cambiarIcono() {//cambia el icono de la caja
 		full=false;
 	}
 	
 	
 	public void sacarMushroom() {//se crea el nuevo mushroom
-		GameObject m=new Mushroom(game, mushroomPos);
-		m.dead();
+		GameObject m=new Mushroom(game, mushroomPos, Action.STOP);
 		game.addObject(m);
 	}
 	

@@ -12,17 +12,20 @@ public class Mario extends MovingObject{
 	private List<Action> actionListToDo;//lista de acciones correctas
 	private static final String NAME = Messages.MARIO_NAME;
 	private static final String SHORTCUT =Messages.MARIO_SHORTCUT;
-	private static final String big=Messages.BIG;
-	private static final String big_shortcut=Messages.BIG_SHORTCUT;
-	private static final String small=Messages.SMALL;
-	private static final String small_shortcut=Messages.SMALL_SHORTCUT;
+	private static final String BIG=Messages.BIG;
+	private static final String BIG_SHORTCUT=Messages.BIG_SHORTCUT;
+	private static final String SMALL=Messages.SMALL;
+	private static final String SMALL_SHORTCUT=Messages.SMALL_SHORTCUT;
+	private static final String MARIO_RIGHT=Messages.MARIO_RIGHT;
+	private static final String MARIO_LEFT=Messages.MARIO_LEFT;
+	private static final String MARIO_STOP=Messages.MARIO_STOP;
 	private String iconoActual; //se guarda el icono 
+	private boolean bigg=true;;
 
 	
 	public Mario(GameWorld game, Position pos) {//el constructor del objeto Mario
 		super(game, pos);
 		iconoActual=this.getIcon();
-		cambiarTamano();//empieza grande
 		actionList=new ActionList();
 		actionListToDo= new ArrayList<>();
 	}
@@ -41,18 +44,18 @@ public class Mario extends MovingObject{
 	
 	int leerTamano(String s) {
 		int tam;
-		s.toLowerCase();
+		s=s.toLowerCase();
 		switch(s) {
-		case big:tam=1;; break;
-		case big_shortcut: tam=1; break;
-		case small_shortcut: tam=0; break;
-		case small: tam=0; break;
+		case BIG:tam=1;; break;
+		case BIG_SHORTCUT: tam=1; break;
+		case SMALL_SHORTCUT: tam=0; break;
+		case SMALL: tam=0; break;
 		default: tam=-1; break;
 		}
 		return tam;
 	}
 
-	
+	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el nuevo Mario en caso de que el formato sea correcto, en otro caso devuelve null, 
 		//además, el nuevo mario creado es el que se guarda en game, es decir, es el que se controla  con las acciones, el otro mario se quedaria haciendo el movimiento automatico como un objeto más
 		Mario c=null;
@@ -91,7 +94,7 @@ public class Mario extends MovingObject{
 	@Override
 	public boolean receiveInteraction(Mushroom obj) {//si toca al mushroom y es pequeño, mario se hace grande, en otro caso no se hace nada, y en cualquier caso se borra el mushroom
 		obj.morir();
-		if(!big())cambiarTamano();
+		if(!bigg)cambiarTamano();
 		return true;
 	}
 	
@@ -100,7 +103,7 @@ public class Mario extends MovingObject{
 	public boolean receiveInteraction(Goomba obj) {/*las interacciones con goomba, si mario esta muerto no se hacen, y si esta vivo: si mario isFalling, mata al goomba;
 		en otro caso si es grande se hace peque�o y mata al goomba, y si no es grande se reseta el juego y mario se muere. como alguien muere siempre, siempre devuelve true*/
 		if(!this.isFalling()) {
-			if(big()) {
+			if(bigg) {
 				cambiarTamano();
 			}
 			else {
@@ -119,6 +122,7 @@ public class Mario extends MovingObject{
 		return true;
 	}
 	
+	@Override
 	public boolean receiveInteraction(Box obj) {//comprueba si mario ha interactuado con la caja, si mario esta subiendo y la caja esta llena, entonces se anaden los puntos, se cambia el icono y sale el mushroom
 		if(isUp()&&obj.full()) {
 			game.puntosBox();
@@ -128,16 +132,20 @@ public class Mario extends MovingObject{
 		return true;
 	}
 	
+	
+	
+	
+	@Override
 	protected Action inicioMov() {//empieza por la derecha por defecto
 		return Action.RIGHT;
 	}
-	
+
 	@Override
 	public String getIcon() {//esta funcion devuelve el icono actual de mario en funcion de cual sea su estado de movimiento
 		String a=iconoActual;
-		if(compararMov(Action.RIGHT))a=Messages.MARIO_RIGHT;
-		else if(compararMov(Action.LEFT))a=Messages.MARIO_LEFT;
-		else if(compararMov(Action.STOP))a=Messages.MARIO_STOP;
+		if(compararMov(Action.RIGHT))a=MARIO_RIGHT;
+		else if(compararMov(Action.LEFT))a=MARIO_LEFT;
+		else if(compararMov(Action.STOP))a=MARIO_STOP;
 		iconoActual=a;
 		return a;
 	}
@@ -153,8 +161,9 @@ public class Mario extends MovingObject{
 	
 	private void iconToAction() {//si mario baja o sube, para que siga moviendose a la derecha con el movimiento automatico, despues de hacer las interacciones se cambia el action segun cual sea su icono
 		switch (iconoActual) {
-		case Messages.MARIO_RIGHT: cambiarMov(Action.RIGHT); break;
-		case Messages.MARIO_LEFT: cambiarMov(Action.LEFT); break;
+		case MARIO_RIGHT: cambiarMov(Action.RIGHT); break;
+		case MARIO_LEFT: cambiarMov(Action.LEFT); break;
+		case MARIO_STOP: cambiarMov(Action.STOP); break;
 		default: break;
 		}
 	}
@@ -167,20 +176,26 @@ public class Mario extends MovingObject{
 		guardarPreUpdateMov();
 		for(int i=0; i<actionListToDo.size();++i) {
 			switch(actionListToDo.get(i)) {
-			case LEFT: this.LEFT();
+			case LEFT: {
+				this.LEFT();
+			}
 			break;
-			case RIGHT: this.RIGHT();
+			case RIGHT:{
+				this.RIGHT();
+			}
 			break;
 			case UP: this.UP(); 
 			break;
 			case DOWN: this.DOWN();
 			break;
-			default: this.STOP();
+			default:{
+				this.STOP();
+			}
 			break;
 			}
 		game.doInteractionsFrom(this);
 		}
-		if((this.sigueIgual()&&!compararMov(Action.STOP))||actionListToDo.size()==0) {//si el resultado de todas las acciones es que se queda en la misma posicion y no ha cambiado su direccion de movimiento, se ejecuta el movimiento automatica. solo hace el movimiento automatico no esta parado
+		if((this.sigueIgual()&&!compararMov(Action.STOP))||actionListToDo.isEmpty()) {//si el resultado de todas las acciones es que se queda en la misma posicion y no ha cambiado su direccion de movimiento, se ejecuta el movimiento automatica. solo hace el movimiento automatico no esta parado
 			movimientoAutomatico();
 			game.doInteractionsFrom(this);
 		}
@@ -188,22 +203,18 @@ public class Mario extends MovingObject{
 		actionListToDo.clear();//reiniciamos la lista
 	}
 	
+	@Override
+	protected boolean puedoArriba() {
+		return (!bigg&&super.puedoArriba())||(bigg&&super.puedoArribaArriba()&&super.puedoArriba());
+	}
+	
 	private void UP() {//toda la logica de mario cuando quiere moverse hacia arriba, si es grande pues la posicion a tener en cuenta es la de su cabeza, y si arriba es tierra o fuera de tablero, no se mueve.
-		if(!big()) {
-			if(puedoArriba()) {
-				moverArriba();
-			}
-		}
-		else {
-			if(puedoArriba()&&puedoArribaArriba()) {
-				moverArriba();
-			}	
-		}
+		cambiarMov(Action.UP);
+		if(puedoArriba())moverArriba();
 	}
 	
 	private void moverArriba() {//se mueve hacia arriba y cambia el action
 		arriba();
-		cambiarMov(Action.UP);
 	}
 	
 	@Override
@@ -213,12 +224,25 @@ public class Mario extends MovingObject{
 	}
 	
 	@Override
+	protected boolean puedoIzquierda() {
+		return (bigg&&puedoArribaIzquierda())||(!bigg&&super.puedoIzquierda());
+	}
+	
+	@Override
+	protected boolean puedoDerecha() {
+		return (bigg&&puedoArribaDerecha())||(!bigg&&super.puedoDerecha());
+	}
+	
+	@Override
 	protected void morir() {//se muere y avisa a game de que esta muerto
 		dead();
 		game.marioHaMuerto();
 	}
 	
-	
+	private void cambiarTamano() {//cambia el tamano
+		bigg=!bigg;
+	}
+
 	private void DOWN() {/*la logica de mario cuando quiere moverse hacia abajo, hay que tener en cuenta las interacciones con el resto de objetos despues del movimiento en cada iteracion del bucle.
 	Y si se hace en el suelo cambia el estado a parado. 
 		*/
@@ -240,7 +264,7 @@ public class Mario extends MovingObject{
 	@Override
 	public boolean isInPosition(Position pos2) {//devuelve true si la posicion recibida coincide con la de mario, y si es grande, si coindice con la de la cabeza tambien es true
 		boolean n=false;
-		if(big()&&super.isInPosition(pos2.devolverAbajo()))n=true;
+		if(bigg&&super.isInPosition(pos2.devolverAbajo()))n=true;
 		return super.isInPosition(pos2)||n;
 	}
 }

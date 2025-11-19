@@ -25,6 +25,7 @@ public class ActionCommand extends AbstractCommand{
 		return c;
 	}
 	
+    
 	public void execute(GameModel game, GameView view) { //ejecuta action
 		if(commandWords2.length==1) {//si no hay nada despu�s de action da fallo
 			view.showError(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);

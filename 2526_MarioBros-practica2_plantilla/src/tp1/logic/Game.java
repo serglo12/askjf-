@@ -26,11 +26,12 @@ public class Game implements GameModel, GameWorld, GameStatus{
 	}
 	
 	//Métodos de GameModel
+	@Override
 	public void update() {//actualiza el juego y resta 1 segundo al tiempo por cada actualizaci�n
 		--this.remainingTime;
 		gameObjects.update();
 	}
-	
+	@Override
 	public void reset(int nuevoNumLevel) {//reset cuando se manda un nivel como argumento
 		this.nLevel=nuevoNumLevel;
 		if(nuevoNumLevel==0) this.initLevel0();
@@ -38,18 +39,18 @@ public class Game implements GameModel, GameWorld, GameStatus{
 		else if(nuevoNumLevel==-1)this.initLevel_1();
 		else this.initLevel2();
 	}
-	
+	@Override
 	public void reset(){//reset sin argumento(se reinicia en el nivel en el que est�s)
 		if(this.nLevel==0)this.initLevel0();
 		else if(this.nLevel==1)this.initLevel1();
 		else if(this.nLevel==-1)this.initLevel_1();
 		else this.initLevel2();
 	}
-	
+	@Override
 	public void exit() {//se le ha dado al comando de exit
 		exitComando=true;
 	}
-	
+	@Override
 	public boolean addObject(String[] objWords) { //se utiliza para el addObjectCommand, que dado todo el array de palabras, gameobjectfactory devuelve el objecto correcto
 		GameObject obj=GameObjectFactory.parse(objWords, this);
 		boolean n=false;
@@ -59,62 +60,63 @@ public class Game implements GameModel, GameWorld, GameStatus{
 		}
 		return n;//devuelve true si el objeto no es nulo
 	}
-
+	@Override
 	public boolean isFinished() {//devuelve true si el juego ha terminado para as� terminar el bucle de controller
 		return win||this.playerLoses()||exitComando;
 	}
-	
+	@Override
 	public void addAction(Action action) {//a�ade una acci�n a la lista
 		mario.addAction(action);
 	}
 	
 	//Métodos de GameWorld
+	@Override
 	public String positionToString(Position pos) {//devuelve lo que haya pintado en esa posici�n
 		return gameObjects.positionToString(pos);
 	}
-	
+	@Override
 	public void borrarObject(GameObject obj) {//se borra el objeto de la lista
 		gameObjects.borrarObject(obj);
 	}
-
+	@Override
 	public boolean marioHaPerdido() {//devuelve true si mario ha perdido, solo sirve para que, en caso de ganar, si muestre el tablero(si ha muerto o se le ha dado a exit no lo hace)
 		return this.playerLoses()||exitComando;
 	}
-	
+	@Override
 	public void marioExited() {//se llama si mario ha tocado la puerta, y se suman los puntos correspondientes.
 		this.points=this.points+this.remainingTime*10;
 		win=true;
 	}
-	
+	@Override
 	public void doInteractionsFrom(GameObject object) {
 		gameObjects.doInteractionsFrom(object);
 	}
-	
+	@Override
 	public void puntosGoombaMuerto() {//se suman los puntos por haber matado a un goomba.
 		this.points+=100;
 	}
-	
+	@Override
 	public void puntosBox() { //se suma los puntos por haberle dado a una caja
 		this.points+=50;
 	}
-	
+	@Override
 	public void addObject(GameObject obj) { //se añade el objeto correspondiente(ahora mismo solo vale para añadir el champiñon después de darle a la caja
 		gameObjects.add(obj);
 	}
-	
+	@Override
 	public void actualizarMario(Mario mario2) { //si se añade un mario con addObject, el que se controla es el nuevo
 		this.mario=mario2;
 	}
 
-	
+	@Override
 	public void restarVida() {//se resta una vida
 		this.lives--;
 	}
-	
+	@Override
 	public boolean isSolid(Position pos) {//true si hay solido en esa posicion
 		return gameObjects.isSolid(pos);
 	}
-	
+	@Override
 	public void marioHaMuerto() { //resta vida y resetea el juego
 		restarVida();
 		reset();
@@ -122,7 +124,7 @@ public class Game implements GameModel, GameWorld, GameStatus{
 
 
 	//Métodos de GameStatus
-	
+	@Override
 	public void initLevel0() {//inicia el nivel 0
 		this.nLevel = 0;
 		this.remainingTime = 100;
@@ -169,7 +171,7 @@ public class Game implements GameModel, GameWorld, GameStatus{
 
 	}
 	
-	
+	@Override
 	public void initLevel1() {//inicia el nivel 1 
 		this.initLevel0();
 		
@@ -184,7 +186,7 @@ public class Game implements GameModel, GameWorld, GameStatus{
 
 
 	}
-	
+	@Override
 	public void initLevel2() {//inicia el nivel 2
 		this.initLevel1();
 		this.nLevel=2;
@@ -196,38 +198,38 @@ public class Game implements GameModel, GameWorld, GameStatus{
 
 		
 	}
-	
+	@Override
 	public void initLevel_1() { //inicia el nivel -1, que es el tablero vacio
 		gameObjects = new GameObjectContainer();
 
 		this.nLevel = -1;
 		this.remainingTime = 100;
 		this.points=0;
-		this.lives=0;
+		this.lives=3;
 		
 	}
-	
+	@Override
 	public String positionToString(int col, int row) {//esta funci�n esta dentro de un bucle que genera todo el tablero
 		Position pos=new Position(row, col);	
 		return gameObjects.positionToString(pos);
 	}
-	
+	@Override
 	public int remainingTime() {//devuelve el tiempo que queda
 		return this.remainingTime;
 	}
-
+	@Override
 	public int points() {//devuelve los puntos
 		return this.points;
 	}
-	
+	@Override
 	public int numLives() {//devuelve las vidas
 		return this.lives;
 	}
-	
+	@Override
 	public boolean playerLoses() {//true si se han acabado las vidas o el tiempo
 		return this.lives==0||this.remainingTime==0;
 	}
-	
+	@Override
 	public boolean playerWins() {//devuelve true si ha ganado
 		return win;
 	}

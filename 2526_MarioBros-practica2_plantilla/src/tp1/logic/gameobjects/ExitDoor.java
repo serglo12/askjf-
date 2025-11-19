@@ -34,7 +34,6 @@ public class ExitDoor extends GameObject{
 	     }
 	     return canInteract;
 	}
-	
 	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) {//si coincide con el nombre o shortcu y despues no hay nada, se crea la puerta correcta, en otro caso devuelve null
 		GameObject c=null;

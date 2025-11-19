@@ -23,7 +23,7 @@ public class CommandGenerator {
 		for (Command c: availableCommands) {
 			if(result==null)result=c.parse(commandWords);
 			}
-		if(result==null&&commandWords[0]=="")result=availableCommands.get(1);//si no hay nada en el array se hace update
+		if(result==null&&"".equals(commandWords[0]))result=availableCommands.get(1);//si no hay nada en el array se hace update
 		return result;
 	}
 		

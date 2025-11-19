@@ -15,7 +15,6 @@ public class HelpCommand extends NoParamsCommand {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
 	
-	@Override
 	public void execute(GameModel game, GameView view) {//se llama la función de commandGenerator, donde se recogen todos los helps de todos los comandos, y se muestra dicho mensaje
 		view.showMessage(CommandGenerator.commandHelp());
 	}
