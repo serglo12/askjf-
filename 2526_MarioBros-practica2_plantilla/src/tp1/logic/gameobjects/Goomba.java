@@ -1,5 +1,9 @@
 package tp1.logic.gameobjects;
 import tp1.view.Messages;
+
+import java.util.Arrays;
+
+import tp1.exceptions.*;
 import tp1.logic.*;
 
 public class Goomba extends MovingObject{
@@ -28,15 +32,14 @@ public class Goomba extends MovingObject{
 	}
 	
 	@Override
-	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el nuevo goomba en caso de ser correcto el formato, y null en otro caso
+	public GameObject parse (String objWords[], GameWorld game, Position pos)throws ObjectParseException, ActionParseException{//devuelve el nuevo goomba en caso de ser correcto el formato, y null en otro caso
 		Goomba c=null;
-		if(matchCommandName(objWords[2])) {
-			if(objWords.length==4){
-				Action mov=devuelveMov(objWords[3]);
-				if(mov!=null)c=new Goomba(game, pos, mov);
-			}
-			else if(objWords.length==3)c=new Goomba(game, pos);
+		if(matchCommandName(objWords[2])&&objWords.length==4) {
+			Action mov=Action.devuelveMov(objWords[3]);
+			c=new Goomba(game, pos, mov);
 		}
+		else if(matchCommandName(objWords[2])&&objWords.length==3)c=new Goomba(game, pos);
+		else if(matchCommandName(objWords[2])&&objWords.length>4)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
 		return c;
 	}
 	

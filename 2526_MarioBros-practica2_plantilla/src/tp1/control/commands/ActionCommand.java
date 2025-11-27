@@ -1,6 +1,7 @@
 package tp1.control.commands;
 
 import tp1.logic.*;
+import tp1.exceptions.*;
 import tp1.view.GameView;
 import tp1.view.Messages;
 
@@ -15,42 +16,29 @@ public class ActionCommand extends AbstractCommand{
     public ActionCommand() {//constructor de action
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
+    public ActionCommand(String[] commandWords) {//constructor de action
+		super(NAME, SHORTCUT, DETAILS, HELP);
+		commandWords2=commandWords;
+	}
     
-    public Command parse(String[] commandWords) {//parse de action, devuelve Action si coincide la primera palabra del array con el nombre o shortcut 
+    public Command parse(String[] commandWords) throws CommandParseException{//parse de action, devuelve Action si coincide la primera palabra del array con el nombre o shortcut 
 		Command c=null;
-		if(matchCommandName(commandWords[0])) {
-			c=this;
-			this.commandWords2=commandWords;
+		if(matchCommandName(commandWords[0])&&commandWords.length>1) {
+			c=new ActionCommand(commandWords);
 		}
+		else if(matchCommandName(commandWords[0]))throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 		return c;
 	}
 	
     
-	public void execute(GameModel game, GameView view) { //ejecuta action
-		if(commandWords2.length==1) {//si no hay nada despu�s de action da fallo
-			view.showError(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
-		}
-		else {//durante todo el array va añadiendo acciones, y si alguna no coincide se muestra unknown action
-			for(int i=1; i<commandWords2.length;++i) {
-				if(commandWords2[i].equals("u")||commandWords2[i].equals("up")) {
-					game.addAction(Action.UP);
-				}
-				else if(commandWords2[i].equals("d")||commandWords2[i].equals("down")) {
-					game.addAction(Action.DOWN);
-				}
-				else if(commandWords2[i].equals("l")||commandWords2[i].equals("left")) {
-					game.addAction(Action.LEFT);
-				}
-				else if(commandWords2[i].equals("r")||commandWords2[i].equals("right")) {
-					game.addAction(Action.RIGHT);
-				}
-				else if(commandWords2[i].equals("s")||commandWords2[i].equals("stop")) {
-					game.addAction(Action.STOP);
-				}
-				else view.showError(String.format(Messages.UNKNOWN_ACTION, commandWords2[i]));
+	public void execute(GameModel game, GameView view) throws CommandExecuteException{ //ejecuta action
+		//durante todo el array va añadiendo acciones, y si alguna no coincide se muestra unknown action
+			try {
+				Action.leerAcciones(commandWords2, game);
+			}catch(ActionParseException a) {
+				throw new CommandExecuteException(a.getMessage());
 			}
 			game.update();
 			if(!game.marioHaPerdido())view.showGame();//solo muestra el juego si el juego no ha terminado
 		}
 	}
-}

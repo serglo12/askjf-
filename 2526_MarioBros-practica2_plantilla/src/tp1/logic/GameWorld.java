@@ -4,7 +4,6 @@ import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.Mario;
 
 public interface GameWorld {//funciones sobre el funcionamente del juego
-	public String positionToString(Position pos);
 	public void marioExited();
 	public void borrarObject(GameObject obj);
 	public void doInteractionsFrom(GameObject object);

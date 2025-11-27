@@ -1,4 +1,5 @@
 package tp1.logic.gameobjects;
+import tp1.exceptions.*;
 
 import tp1.logic.*;
 import tp1.view.Messages;;
@@ -8,10 +9,6 @@ public abstract class MovingObject extends GameObject{
 	
 	private Action mov;//Enum p�blico de game con el que guardar el estado de Movimiento actual
 	private Action preUpdateMov;
-	protected static final String left=Messages.LEFT;
-	protected static final String left_shortcut=Messages.LEFT_SHORTCUT;
-	protected static final String right= Messages.RIGHT;
-	protected static final String right_shortcut=Messages.RIGHT_SHORTCUT;
 	
 	public MovingObject(GameWorld game, Position pos) {//constructor de movingobject
 		super(game, pos);
@@ -24,20 +21,6 @@ public abstract class MovingObject extends GameObject{
 	}
 	
 	public MovingObject() {//constructor vacio, para addobjectcommand, es el que se llama por defecto en sus clases hijas
-	}
-	
-	
-	Action devuelveMov(String mov) {//pasa el string de movimiento al action correspondiente 
-		Action mov2;
-		mov.toLowerCase();
-		switch(mov) {
-		case left:mov2=Action.LEFT; break;
-		case left_shortcut: mov2=Action.LEFT; break;
-		case right: mov2=Action.RIGHT; break;
-		case right_shortcut: mov2=Action.RIGHT; break;
-		default: mov2=null; break;
-		}
-		return mov2;
 	}
 	
 	protected abstract Action inicioMov();//cada uno tiene un movimiento distinto

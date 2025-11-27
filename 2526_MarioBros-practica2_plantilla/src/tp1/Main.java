@@ -16,7 +16,7 @@ public class Main {
 	 * 
 	 * @param args Arguments for the game.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		// Required to avoid issues with tests
         Locale.of("es", "ES");
 		

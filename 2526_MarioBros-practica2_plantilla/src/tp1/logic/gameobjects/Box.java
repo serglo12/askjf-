@@ -1,6 +1,11 @@
 package tp1.logic.gameobjects;
 import tp1.view.Messages;
+import tp1.exceptions.ObjectParseException;
 import tp1.logic.*;
+
+import java.util.Arrays;
+
+import tp1.exceptions.*;
 
 public class Box extends GameObject{	
 	private static final String NAME=Messages.BOX_NAME;
@@ -35,24 +40,28 @@ public class Box extends GameObject{
 		full=false;
 	}
 	
-	
 	public void sacarMushroom() {//se crea el nuevo mushroom
-		GameObject m=new Mushroom(game, mushroomPos, Action.STOP);
-		game.addObject(m);
+		if(!mushroomPos.outOfBounds()) {
+			GameObject m=new Mushroom(game, mushroomPos, Action.STOP);
+			game.addObject(m);
+		}
 	}
 	
 	public boolean full() {//devuelve true si tiene un champiñon dentro
 		return full;
 	}
 	
-	int devuelveFull(String mov) {//lee el full de un string
+	int devuelveFull(String mov, String objWords[]) throws ObjectParseException{//lee el full de un string
 		int full;
 		switch(mov) {
 		case BOX_FULL:full=1;; break;
 		case BOX_FULL_SHORTCUT: full=1; break;
 		case BOX_EMPTY_SHORTCUT: full=0; break;
 		case BOX_EMPTY: full=0; break;
-		default: full=-1; break;
+		default: {
+			full=-1; 
+			throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+			}
 		}
 		return full;
 	}
@@ -63,12 +72,12 @@ public class Box extends GameObject{
 	}
 	
 	@Override
-	public GameObject parse (String objWords[], GameWorld game, Position pos) { //si coincide con el nombre o shortcut, y despues el formato es correcto(o no hay nada) se crea la caja correcta, en otro caso devuelve null
+	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException{ //si coincide con el nombre o shortcut, y despues el formato es correcto(o no hay nada) se crea la caja correcta, en otro caso devuelve null
 		Box c=null;
 		if(matchCommandName(objWords[2])) {
 			if(objWords.length==4){
-				int num=devuelveFull(objWords[3]);
-				if(devuelveFull(objWords[3])!=-1) {
+				int num=devuelveFull(objWords[3], objWords);
+				if(num!=-1) {
 					c=new Box(game, pos);
 					if(num==1)c.full=true;
 					else c.full=false;		
@@ -76,6 +85,8 @@ public class Box extends GameObject{
 			}
 			
 			else if(objWords.length==3)c=new Box(game, pos);
+			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+
 		}
 		return c;
 	}

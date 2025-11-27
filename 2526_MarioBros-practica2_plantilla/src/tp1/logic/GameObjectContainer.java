@@ -5,7 +5,7 @@ import java.util.List;
 
 import tp1.logic.gameobjects.GameObject;
 
-public class GameObjectContainer {
+public class GameObjectContainer{
 	private List<GameObject> objects;//lista de objetos del juego
 	
 

@@ -2,7 +2,7 @@ package tp1.control.commands;
 
 import tp1.view.Messages;
 
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractCommand implements Command{
 
 	// Forman parte de atributos de estado
 	private final String name;

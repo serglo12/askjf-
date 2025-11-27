@@ -1,5 +1,6 @@
 
 package tp1.logic.gameobjects;
+import tp1.exceptions.*;
 import tp1.view.Messages;
 import tp1.logic.*;
 
@@ -33,15 +34,14 @@ public class Mushroom extends MovingObject{
 	}
 	
 	@Override
-	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el objeto si el formato es correcto, en caso contrario se devuelve null
+	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException, ActionParseException{//devuelve el objeto si el formato es correcto, en caso contrario se devuelve null
 		Mushroom c=null;
-		if(matchCommandName(objWords[2])) {
-			if(objWords.length==4){
-				Action mov=devuelveMov(objWords[3]);
-				c=new Mushroom(game, pos, mov);
-			}
-			else if(objWords.length==3)c=new Mushroom(game, pos);
+		if(matchCommandName(objWords[2])&&objWords.length==4) {
+			Action mov=Action.devuelveMov(objWords[3]);
+			c=new Mushroom(game, pos, mov);
 		}
+		else if(matchCommandName(objWords[2])&&objWords.length==3)c=new Mushroom(game, pos);
+		else if(matchCommandName(objWords[2])&&objWords.length>4)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted(String.join(" ", objWords)));
 		return c;
 	}
 	

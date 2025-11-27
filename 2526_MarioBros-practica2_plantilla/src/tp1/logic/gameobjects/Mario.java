@@ -1,9 +1,11 @@
 package tp1.logic.gameobjects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tp1.logic.*;
+import tp1.exceptions.*;
 import tp1.view.Messages;
 
 public class Mario extends MovingObject{
@@ -42,7 +44,7 @@ public class Mario extends MovingObject{
 		cambiarNombres(NAME,SHORTCUT);
 	}
 	
-	int leerTamano(String s) {
+	int leerTamano(String s) throws ObjectParseException{
 		int tam;
 		s=s.toLowerCase();
 		switch(s) {
@@ -50,35 +52,37 @@ public class Mario extends MovingObject{
 		case BIG_SHORTCUT: tam=1; break;
 		case SMALL_SHORTCUT: tam=0; break;
 		case SMALL: tam=0; break;
-		default: tam=-1; break;
+		default:{
+			tam=-1;
+			throw new ObjectParseException(String.format(Messages.INVALID_MARIO_SIZE, s));
+			}
 		}
 		return tam;
 	}
 
 	@Override
-	public GameObject parse (String objWords[], GameWorld game, Position pos) {//devuelve el nuevo Mario en caso de que el formato sea correcto, en otro caso devuelve null, 
+	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException, ActionParseException{//devuelve el nuevo Mario en caso de que el formato sea correcto, en otro caso devuelve null, 
 		//además, el nuevo mario creado es el que se guarda en game, es decir, es el que se controla  con las acciones, el otro mario se quedaria haciendo el movimiento automatico como un objeto más
 		Mario c=null;
 		if(matchCommandName(objWords[2])) {
-			if(objWords.length>=4){
-				Action mov=devuelveMov(objWords[3]);
+			if(objWords.length==4||objWords.length==5){
+				Action mov=Action.devuelveMov(objWords[3]);
 				if(mov!=null&&objWords.length==4) {
 					c=new Mario(game, pos, mov);
-					game.actualizarMario(c);
 				}
 				else if(mov!=null&&objWords.length==5) {
 					int n=leerTamano(objWords[4]);
 					if(n!=-1) {
 						c=new Mario(game, pos, mov);
 						if(n==0)c.cambiarTamano();
-						game.actualizarMario(c);
 					}
 				}	
 			}
 			else if(objWords.length==3){
 				c=new Mario(game, pos);
-				game.actualizarMario(c);
 			}
+			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+			game.actualizarMario(c);
 		}
 		return c;
 	}
@@ -225,12 +229,12 @@ public class Mario extends MovingObject{
 	
 	@Override
 	protected boolean puedoIzquierda() {
-		return (bigg&&puedoArribaIzquierda())||(!bigg&&super.puedoIzquierda());
+		return (bigg&&puedoArribaIzquierda()&&super.puedoIzquierda())||(!bigg&&super.puedoIzquierda());
 	}
 	
 	@Override
 	protected boolean puedoDerecha() {
-		return (bigg&&puedoArribaDerecha())||(!bigg&&super.puedoDerecha());
+		return (bigg&&puedoArribaDerecha()&&super.puedoDerecha())||(!bigg&&super.puedoDerecha());
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package tp1.control.commands;
 
 import tp1.logic.GameModel;
 import tp1.view.GameView;
+import tp1.exceptions.*;
 import tp1.view.Messages;
 
 public class AddObjectCommand extends AbstractCommand{
@@ -14,26 +15,34 @@ public class AddObjectCommand extends AbstractCommand{
 	    public AddObjectCommand() {
 			super(NAME, SHORTCUT, DETAILS, HELP);
 		}
+	    public AddObjectCommand(String[] commandWords) {
+			super(NAME, SHORTCUT, DETAILS, HELP);
+			commandWords2=commandWords;
+		}
 	    @Override
-	    public Command parse(String[] commandWords) {//parse de addobject, devuelve addobject si coincide la primera palabra del array con el nombre o shortcut 
+	    public Command parse(String[] commandWords) throws CommandParseException{//parse de addobject, devuelve addobject si coincide la primera palabra del array con el nombre o shortcut 
 			Command c=null;
-			if(matchCommandName(commandWords[0])) {
-				c=this;
-				this.commandWords2=commandWords;
+			if(matchCommandName(commandWords[0])&&commandWords.length>1) {
+				c=new AddObjectCommand(commandWords);
 			}
+			else if(matchCommandName(commandWords[0]))throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);//si no hay nada despu�s de action da fallo
 			return c;
 	    }
+	    
 	    @Override
-	    public void execute(GameModel game, GameView view) {//si es una sola palabra da fallo, en otro caso se llama a game, que a su vez llama a gameobjectfactory, donde se ve si es correcto o no
-	    	if(commandWords2.length==1) {//si no hay nada despu�s de action da fallo
-				view.showError(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
-			}
-	    	else {
+	    public void execute(GameModel game, GameView view) throws CommandExecuteException{//si es una sola palabra da fallo, en otro caso se llama a game, que a su vez llama a gameobjectfactory, donde se ve si es correcto o no
+	    	try{
 	    		if(game.addObject(commandWords2)) {//true si el objecto se ha leido correctamente
-	    			view.showGame();
-	    		}
-	    		else view.showError(Messages.INVALID_GAME_OBJECT.formatted(String.join(" ", commandWords2))); //si el objecto es incorrecto
+	    		view.showGame();
+	    	}
+	    	else {
+	    		throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, new ObjectParseException(Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", commandWords2))));//si el objecto es incorrecto
+	    	}	
+	    	}catch(OffBoardException e) {
+				throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
+			}
+	    	catch(GameParseException e) {
+				throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 	    	}
 	    }
-	    
 }

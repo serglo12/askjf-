@@ -1,5 +1,7 @@
 package tp1.logic;
 import tp1.logic.gameobjects.*;
+import tp1.view.Messages;
+import tp1.exceptions.*;
 
 public class Game implements GameModel, GameWorld, GameStatus{
 
@@ -51,7 +53,7 @@ public class Game implements GameModel, GameWorld, GameStatus{
 		exitComando=true;
 	}
 	@Override
-	public boolean addObject(String[] objWords) { //se utiliza para el addObjectCommand, que dado todo el array de palabras, gameobjectfactory devuelve el objecto correcto
+	public boolean addObject(String[] objWords)throws OffBoardException, ObjectParseException, PositionParseException{ //se utiliza para el addObjectCommand, que dado todo el array de palabras, gameobjectfactory devuelve el objecto correcto
 		GameObject obj=GameObjectFactory.parse(objWords, this);
 		boolean n=false;
 		if(obj!=null) { //si no es nulo se añade a la lista de gameobjects
@@ -70,10 +72,6 @@ public class Game implements GameModel, GameWorld, GameStatus{
 	}
 	
 	//Métodos de GameWorld
-	@Override
-	public String positionToString(Position pos) {//devuelve lo que haya pintado en esa posici�n
-		return gameObjects.positionToString(pos);
-	}
 	@Override
 	public void borrarObject(GameObject obj) {//se borra el objeto de la lista
 		gameObjects.borrarObject(obj);

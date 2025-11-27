@@ -1,6 +1,7 @@
 package tp1.logic.gameobjects;
 
 import tp1.logic.GameWorld;
+import tp1.exceptions.*;
 import tp1.logic.Position;
 
 public abstract class GameObject implements GameItem{ // TODO 
@@ -22,7 +23,7 @@ public abstract class GameObject implements GameItem{ // TODO
 	}
 	public GameObject() {}//constructor vacio del objeto
 	
-	public abstract GameObject parse (String objWords[], GameWorld game, Position pos);//funcion abstracta que crea el objeto si el formato es correcto
+	public abstract GameObject parse (String objWords[], GameWorld game, Position pos)throws OffBoardException, ObjectParseException, ActionParseException;//funcion abstracta que crea el objeto si el formato es correcto
 	
 	void cambiarNombres(String NAME, String SHORTCUT){//cambia el nombre del objeto a los atributos
 		name=NAME;

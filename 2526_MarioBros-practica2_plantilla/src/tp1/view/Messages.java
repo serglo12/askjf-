@@ -51,12 +51,24 @@ public class Messages {
 	// Errores de commandos:
 	public static final String COMMAND_PARAMETERS_MISSING = "Missing parameters";
 	public static final String COMMAND_INCORRECT_PARAMETER_NUMBER = "Incorrect parameter number";
-	public static final String UNKNOWN_ACTION = "Unknown action: \"%s\"";
-	public static final String ILLEGAL_ACTION = "Illegal action: \"%s\"";
+	public static final String UNKNOWN_ACTION = "Unknown action: %s";
+	public static final String ILLEGAL_ACTION = "Illegal action: %s";
 	public static final String INVALID_COMMAND = "Invalid command: %s";
+	public static final String INVALID_POSITION = "Invalid position: %s";
+	public static final String INVALID_OBJECT_POSITION = "Invalid object position: %s";
 	public static final String INVALID_COMMAND_PARAMETERS = "Invalid command parameters";
 	public static final String ERROR_COMMAND_EXECUTE = "Command execute problem";
-
+	public static final String INPUT_STRING= "For input string: %s";
+	public static final String POSITION_OUT_BOUNDS= "Object position is off board: %s";
+	public static final String UNKNOWN_GAME_OBJECT= "Unknown game object: \"%s\"";
+	public static final String ACTION_INCORRECT_PARAMETER_NUMBER = "Incorrect 'action command', because the action list is empty (all actions are unknown).";
+	public static final String UNKNOWN_DIRECTION = "Unknown moving object direction: %s";
+	public static final String INVALID_DIRECTION = "Invalid moving object direction: %s";
+	public static final String INVALID_BOX_STATUS = "Invalid Box status: \"%s\"";
+	public static final String INVALID_MARIO_SIZE = "Invalid Mario size: \"%s\"";
+	public static final String PARSE_INCORRECT_PARAMETER_NUMBER = "Object parse error, too much args: \"%s\"";
+	
+	
 	
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
 	@Deprecated
@@ -132,7 +144,13 @@ public class Messages {
 	public static final String LEFT = "left";
 	public static final String LEFT_SHORTCUT = "l";
 	public static final String RIGHT = "right";
+	public static final String UP = "up";
+	public static final String UP_SHORTCUT = "u";
 	public static final String RIGHT_SHORTCUT = "r";
+	public static final String DOWN = "down";
+	public static final String DOWN_SHORTCUT = "d";
+	public static final String STOP = "stop";
+	public static final String STOP_SHORTCUT = "s";
 	public static final String BIG = "big";
 	public static final String BIG_SHORTCUT = "b";
 	public static final String SMALL = "small";

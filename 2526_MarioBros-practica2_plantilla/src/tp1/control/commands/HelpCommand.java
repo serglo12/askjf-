@@ -1,6 +1,7 @@
 package tp1.control.commands;
 
 import tp1.logic.GameModel;
+import tp1.exceptions.*;
 import tp1.view.GameView;
 import tp1.view.Messages;
 
@@ -15,7 +16,7 @@ public class HelpCommand extends NoParamsCommand {
 		super(NAME, SHORTCUT, DETAILS, HELP);
 	}
 	
-	public void execute(GameModel game, GameView view) {//se llama la función de commandGenerator, donde se recogen todos los helps de todos los comandos, y se muestra dicho mensaje
+	public void execute(GameModel game, GameView view) throws CommandExecuteException{//se llama la función de commandGenerator, donde se recogen todos los helps de todos los comandos, y se muestra dicho mensaje
 		view.showMessage(CommandGenerator.commandHelp());
 	}
 

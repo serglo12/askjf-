@@ -2,7 +2,7 @@ package tp1.control.commands;
 
 import java.util.Arrays;
 import java.util.List;
-
+import tp1.exceptions.*;
 import tp1.view.Messages;
 
 public class CommandGenerator {
@@ -14,16 +14,20 @@ public class CommandGenerator {
 	        new HelpCommand(),
 	        new ExitCommand(),
 			new AddObjectCommand());
-
-	public static Command parse(String[] commandWords) { //recorre todos los comandos, y si coincide con alguno devuelve ese, en caso contrario devuelve null
+	public static Command parse(String[] commandWords) throws CommandParseException{ //recorre todos los comandos, y si coincide con alguno devuelve ese, en caso contrario devuelve null
 		Command result=null;
 		commandWords = java.util.Arrays.stream(commandWords)// con esto se hace minúsculas todas los strings del array
 		        .map(String::toLowerCase)
 		        .toArray(String[]::new);	
+		try {
 		for (Command c: availableCommands) {
 			if(result==null)result=c.parse(commandWords);
-			}
+		}
 		if(result==null&&"".equals(commandWords[0]))result=availableCommands.get(1);//si no hay nada en el array se hace update
+		else if(result==null)throw new CommandParseException(Messages.UNKNOWN_COMMAND.formatted(String.join(" ", commandWords)));
+		} catch(CommandParseException exception){
+			throw exception;
+		}
 		return result;
 	}
 		
