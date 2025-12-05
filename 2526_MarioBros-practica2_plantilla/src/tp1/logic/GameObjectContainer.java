@@ -2,7 +2,6 @@ package tp1.logic;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import tp1.logic.gameobjects.GameObject;
 
 public class GameObjectContainer{
@@ -19,6 +18,17 @@ public class GameObjectContainer{
 	
 	public void borrarObject(GameObject object) {//borra un objecto de la lista
 		objects.remove(object);
+	}
+	
+	public void clonarObject(List<GameObject> nuevosObjects) {
+		this.objects=new ArrayList<>(nuevosObjects);
+	}
+	
+	public List<String> saveObjects(List<String> obj){//se guardan todos los objetos en una lista de strings
+		for(int i=0; i<objects.size();++i) {
+			objects.get(i).saveObject(obj);
+		}
+		return obj;
 	}
 	
 	public String positionToString(Position pos) {//devuelve el icono del objeto que haya en esa posicion

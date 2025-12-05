@@ -1,5 +1,7 @@
 
 package tp1.logic.gameobjects;
+import java.util.List;
+
 import tp1.exceptions.*;
 import tp1.view.Messages;
 import tp1.logic.*;
@@ -34,14 +36,21 @@ public class Mushroom extends MovingObject{
 	}
 	
 	@Override
+	protected GameObject clonarEspecifico() {
+		Mushroom e=new Mushroom();
+		this.guardarMov(e);
+		return e;
+	}
+	
+	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException, ActionParseException{//devuelve el objeto si el formato es correcto, en caso contrario se devuelve null
 		Mushroom c=null;
-		if(matchCommandName(objWords[2])&&objWords.length==4) {
-			Action mov=Action.devuelveMov(objWords[3]);
+		if(matchCommandName(objWords[1])&&objWords.length==3) {//si hay 3 palabras y coincide con el objeto
+			Action mov=Action.devuelveMov(objWords[2]);
 			c=new Mushroom(game, pos, mov);
 		}
-		else if(matchCommandName(objWords[2])&&objWords.length==3)c=new Mushroom(game, pos);
-		else if(matchCommandName(objWords[2])&&objWords.length>4)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted(String.join(" ", objWords)));
+		else if(matchCommandName(objWords[1])&&objWords.length==2)c=new Mushroom(game, pos);//si coincide y hay dos palabras entonces se crea por defecto
+		else if(matchCommandName(objWords[1])&&objWords.length>3)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted(String.join(" ", objWords)));//si hay mas palabras de las necesarias, se manda esta excepcion
 		return c;
 	}
 	
@@ -53,6 +62,12 @@ public class Mushroom extends MovingObject{
 	@Override
 	protected Action inicioMov() {//por defecto empieza moviendose hacia la derecha
 		return Action.RIGHT;
+	}
+	
+	protected void leerEspecifico(List<String> lista) {//se lee lo especifico del objeto
+		lista.add(NAME);
+		lista.add(" ");
+		lista.add(devuelveAction());
 	}
 	
 	@Override

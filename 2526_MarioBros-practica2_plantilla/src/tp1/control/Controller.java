@@ -5,7 +5,6 @@ import tp1.exceptions.*;
 import tp1.control.commands.CommandGenerator;
 import tp1.logic.GameModel;
 import tp1.view.GameView;
-import tp1.view.Messages;
 
 /**
  *  Accepts user input and coordinates the game execution logic
@@ -30,13 +29,13 @@ public class Controller {
 
 		view.showGame();
 		
-		while ( !game.isFinished()) {
+		while (!game.isFinished()) {
 			String[] words = view.getPrompt();
 			try {
 				Command command = CommandGenerator.parse(words);
 				command.execute(game, view);
 			}
-			catch(CommandException e) { 
+			catch(CommandException e) { // aqui se catchean las excepciones del execute(todas las commandExecuteException)
 		 		view.showError(e.getMessage());
 		 		Throwable cause = e.getCause();
 		 		while (cause != null) {

@@ -1,6 +1,8 @@
 package tp1.logic.gameobjects;
 
 import tp1.logic.GameWorld;
+
+import java.util.List;
 import tp1.exceptions.*;
 import tp1.logic.Position;
 
@@ -10,12 +12,9 @@ public abstract class GameObject implements GameItem{ // TODO
 	private Position pos;
 	private boolean isAlive;
 	protected GameWorld game; 
-	private Position preUpdateMov;
 	private String name;
 	private String shortcut;
 	
-	
-
 	public GameObject(GameWorld game, Position pos) {//constructor general de cualquier objeto
 		this.isAlive = true;
 		this.pos = pos;
@@ -23,19 +22,38 @@ public abstract class GameObject implements GameItem{ // TODO
 	}
 	public GameObject() {}//constructor vacio del objeto
 	
-	public abstract GameObject parse (String objWords[], GameWorld game, Position pos)throws OffBoardException, ObjectParseException, ActionParseException;//funcion abstracta que crea el objeto si el formato es correcto
+	public abstract GameObject parse (String objWords[], GameWorld game, Position pos)throws OffBoardException, GameParseException;//funcion abstracta que crea el objeto si el formato es correcto
 	
 	void cambiarNombres(String NAME, String SHORTCUT){//cambia el nombre del objeto a los atributos
 		name=NAME;
 		shortcut=SHORTCUT;
 	}
 	
-	protected boolean matchCommandName(String name) {//true si coincide con el nombre o el shortcut, dando igual mayusculas o minusculas
+	public void saveObject(List<String> lista) {//salva el objeto correspondiente
+		lista.add(pos.devolverPosition());
+		lista.add(" ");
+		leerEspecifico(lista);
+		lista.add("\n");
+	}
+	
+	protected abstract void leerEspecifico(List<String> lista);//cada objeto tiene sus cosas particulares, principalmente el nombre
+	
+	public boolean matchCommandName(String name) {//true si coincide con el nombre o el shortcut, dando igual mayusculas o minusculas
 		return this.name.equalsIgnoreCase(name) || this.shortcut.equalsIgnoreCase(name);
 	}
 	
 	public void update() {// vacio y no abstracto para que en el caso de los solidos no haya que crear un update en su clase
 	}
+	
+	public GameObject clonarObject() {
+		GameObject e=clonarEspecifico();
+		e.pos=this.pos;
+		e.game=this.game;
+		e.isAlive=this.isAlive;
+		return e;
+	}
+
+	protected abstract GameObject clonarEspecifico();
 	
 	public void addObject(GameObject obj) {//añade un objeto a la lista de objetos
 		game.addObject(obj);
@@ -49,60 +67,12 @@ public abstract class GameObject implements GameItem{ // TODO
 		isAlive=true;
 	}
 	
-	void guardarPosPreUpdate() {//guarda la posicion previa a hacer su update
-		preUpdateMov=this.pos;
+	void setPosition(Position pos) {//se cambia la posicion a donde se le diga
+		this.pos=pos;
 	}
 	
-	boolean sigueIgual() {//compara si el objeto sigue igual que antes de hacer el update
-		return this.pos.comparePos(preUpdateMov);
-	}
-	
-	void derecha() {//se mueve a la derecha
-		this.pos=this.pos.devolverDerecha();
-	}
-	
-	void izquierda() {//se mueve a la izquierda
-		this.pos=this.pos.devolverIzquierda();
-	}
-	
-	void arriba() {//se mueve hacia arriba
-		this.pos=this.pos.devolverArriba();
-	}
-	
-	void abajo() {//se mueve hacia abajo
-		this.pos=this.pos.devolverAbajo();
-	}
-	
-	boolean puedoDerecha() {//true si puedo moverme a la derecha
-		return !this.pos.devolverDerecha().outOfBounds()&&!game.isSolid(this.pos.devolverDerecha());
-	}
-	
-	boolean abajoFueraDeTablero() {//true si abajo esta fuera de tablero
-		return this.pos.devolverAbajo().outOfBounds();
-	}
-	
-	boolean puedoIzquierda() {//true si puedo moverme a la izquierda
-		return !this.pos.devolverIzquierda().outOfBounds()&&!game.isSolid(this.pos.devolverIzquierda());
-	}
-	
-	boolean puedoAbajo() {//true si puedo moverme abajo
-		return !this.pos.devolverAbajo().outOfBounds()&&!game.isSolid(this.pos.devolverAbajo());
-	}
-	
-	boolean puedoArriba() {//true si puedo moverme arriba
-		return !this.pos.devolverArriba().outOfBounds()&&!game.isSolid(this.pos.devolverArriba());
-	}
-	
-	boolean puedoArribaDerecha() {//true si puedo moverme arriba a la derecha
-		return !this.pos.devolverDerecha().devolverArriba().outOfBounds()&&!game.isSolid(this.pos.devolverDerecha().devolverArriba());
-	}
-	
-	boolean puedoArribaIzquierda() {//true si puedo moverme arriba a la izquierda
-		return !this.pos.devolverIzquierda().devolverArriba().outOfBounds()&&!game.isSolid(this.pos.devolverIzquierda().devolverArriba());
-	}
-	
-	boolean puedoArribaArriba() {//true si puedo moverme dos casillas arriba
-		return !this.pos.devolverArriba().devolverArriba().outOfBounds()&&!game.isSolid(this.pos.devolverArriba().devolverArriba());
+	Position getPosition() {
+		return this.pos;
 	}
 	
 	public boolean isInPosition(GameItem obj) {//true si estan en la misma posicion

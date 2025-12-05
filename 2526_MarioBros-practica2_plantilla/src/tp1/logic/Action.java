@@ -45,50 +45,51 @@ public enum Action {
 		}
 	}
 	
-	public static void leerAcciones(String[] commandWords2, GameModel game) throws ActionParseException{
+	public static void leerAcciones(String[] commandWords2, GameModel game) throws ActionParseException{/*Ahora mismo si hay varias acciones y una está mal, hace todas ignorado la que está mal.
+	Si todas las que hay están mal salta el string de que todas están mal */
 		int contador=1;
-		for(int i=1; i<commandWords2.length;++i) {
-			if(commandWords2[i].equals(up_shortcut)||commandWords2[i].equals(up)) {
+		for(int i=1; i<commandWords2.length;++i) {//el for va leyendo todas las acciones
+			if(commandWords2[i].equalsIgnoreCase(up_shortcut)||commandWords2[i].equalsIgnoreCase(up)) {
 				game.addAction(Action.UP);
 			}
-			else if(commandWords2[i].equals(down_shortcut)||commandWords2[i].equals(down)) {
+			else if(commandWords2[i].equalsIgnoreCase(down_shortcut)||commandWords2[i].equalsIgnoreCase(down)) {
 				game.addAction(Action.DOWN);
 			}
-			else if(commandWords2[i].equals(left_shortcut)||commandWords2[i].equals(left)) {
+			else if(commandWords2[i].equalsIgnoreCase(left_shortcut)||commandWords2[i].equalsIgnoreCase(left)) {
 				game.addAction(Action.LEFT);
 			}
-			else if(commandWords2[i].equals(right_shortcut)||commandWords2[i].equals(right)) {
+			else if(commandWords2[i].equalsIgnoreCase(right_shortcut)||commandWords2[i].equalsIgnoreCase(right)) {
 				game.addAction(Action.RIGHT);
 			}
-			else if(commandWords2[i].equals(stop_shortcut)||commandWords2[i].equals(stop)) {
+			else if(commandWords2[i].equalsIgnoreCase(stop_shortcut)||commandWords2[i].equalsIgnoreCase(stop)) {
 				game.addAction(Action.STOP);
 			}
 			else {
 				contador+=1;
 			}
 		}
-		if(contador==commandWords2.length)throw new ActionParseException(Messages.ACTION_INCORRECT_PARAMETER_NUMBER);
-
-		
+		if(contador==commandWords2.length)throw new ActionParseException(Messages.ACTION_INCORRECT_PARAMETER_NUMBER);//si todas las acciones son malas, se lanza esa excepcion
 	}
 	
 	
+	public static String devuelveString(Action a) {//dada la accion se devuelve el string que la representa
+		String mov;
+		switch (a) {
+		case LEFT: mov=left; break;
+		case RIGHT: mov=right; break;
+		case STOP: mov=stop; break;
+		case DOWN: mov=down; break;
+		default: mov=up; break;
+		}
+		return mov;
+	}
 	
 	public static Action devuelveMov(String mov) throws ActionParseException{//pasa el string de movimiento al action correspondiente 
 		Action mov2=null;
-		switch(mov) {
-		case left:mov2=Action.LEFT; break;
-		case left_shortcut: mov2=Action.LEFT; break;
-		case right: mov2=Action.RIGHT; break;
-		case right_shortcut: mov2=Action.RIGHT; break;
-		case up: break;
-		case up_shortcut: break;
-		case down: break;
-		case down_shortcut: break;
-		case stop: break;
-		case stop_shortcut: break;
-		default: throw new ActionParseException(String.format(Messages.UNKNOWN_ACTION, mov));
-		}
+		if(mov.equalsIgnoreCase(left)||mov.equalsIgnoreCase(left_shortcut))mov2=LEFT;
+		else if(mov.equalsIgnoreCase(right)||mov.equalsIgnoreCase(right_shortcut))mov2=RIGHT;
+		else if(mov.equalsIgnoreCase(stop)||mov.equalsIgnoreCase(stop_shortcut))mov2=STOP;
+		else if(!(mov.equalsIgnoreCase(up)||mov.equalsIgnoreCase(up_shortcut)||mov.equalsIgnoreCase(down)||mov.equalsIgnoreCase(down_shortcut)))throw new ActionParseException(String.format(Messages.UNKNOWN_ACTION, mov));//si la accion no es correcta se lanza esta excepcion
 		if(mov2==null)throw new ActionParseException();
 		return mov2;
 	}

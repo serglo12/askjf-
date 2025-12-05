@@ -1,7 +1,7 @@
 package tp1.logic.gameobjects;
 import tp1.view.Messages;
 
-import java.util.Arrays;
+import java.util.List;
 
 import tp1.exceptions.*;
 import tp1.logic.*;
@@ -34,18 +34,30 @@ public class Goomba extends MovingObject{
 	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos)throws ObjectParseException, ActionParseException{//devuelve el nuevo goomba en caso de ser correcto el formato, y null en otro caso
 		Goomba c=null;
-		if(matchCommandName(objWords[2])&&objWords.length==4) {
-			Action mov=Action.devuelveMov(objWords[3]);
+		if(matchCommandName(objWords[1])&&objWords.length==3) {//si hay 3 palabras y coincide con el objeto
+			Action mov=Action.devuelveMov(objWords[2]);//se lee la posicion(porque deberia de haberla)
 			c=new Goomba(game, pos, mov);
 		}
-		else if(matchCommandName(objWords[2])&&objWords.length==3)c=new Goomba(game, pos);
-		else if(matchCommandName(objWords[2])&&objWords.length>4)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+		else if(matchCommandName(objWords[1])&&objWords.length==2)c=new Goomba(game, pos);//si no tiene mas argumentos
+		else if(matchCommandName(objWords[1])&&objWords.length>3)throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", objWords))));//si hay mas palabras de las necesarias, se manda esta excepcion
 		return c;
 	}
 	
 	@Override
+	protected GameObject clonarEspecifico() {
+		Goomba e=new Goomba();
+		this.guardarMov(e);
+		return e;
+	}
+	@Override
 	protected Action inicioMov() {//por defecto empieza yendo a la izquierda
 		return Action.LEFT;
+	}
+	
+	protected void leerEspecifico(List<String> lista) {//se lee lo especifico del objeto
+		lista.add(NAME);
+		lista.add(" ");
+		lista.add(devuelveAction());
 	}
 
 	

@@ -15,6 +15,10 @@ public class Position {
 		this.row=row;
 	}
 	
+	public String devolverPosition() {
+		return ("("+Integer.toString(row)+","+Integer.toString(col)+")");
+	}
+	
 	public boolean comparePos(Position pos2) {//devuelve true si dos posiciones son iguales
 		return this.col==pos2.col&&this.row==pos2.row;
 		
@@ -41,28 +45,25 @@ public class Position {
 	public static Position leerPosition(String[] objWords)throws PositionParseException, OffBoardException{
 		int a, b;
 		//con esto se guarda los enteros que representan la posicion
-		String posicionn= objWords[1].replace("(", "").replace(")", "");
+		String posicionn= objWords[0].replace("(", "").replace(")", "");
 		String[] posicion = posicionn.split(",");
 		try {
 		a = Integer.parseInt(posicion[0].trim());
 		}
-		catch (NumberFormatException e) {
-		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[1]), new ArrayIndexOutOfBoundsException(Messages.INPUT_STRING.formatted(posicion[0])));
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[1]));
+		catch (NumberFormatException e) {//aqui da fallo si el primer elemento no es un numero
+		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[0]), new NumberFormatException(Messages.INPUT_STRING.formatted(posicion[0])));
 		}
 		try {
 			b = Integer.parseInt(posicion[1].trim());
 		}
-		catch (ArrayIndexOutOfBoundsException e) {
-		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[1]));
+		catch (ArrayIndexOutOfBoundsException e) {//da fallo si habia un espacio dentro de la posicion, por ejemplo "(12, 2)"
+		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[0]));
 		}
-		catch (NumberFormatException e) {
-		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[1]), new ArrayIndexOutOfBoundsException(Messages.INPUT_STRING.formatted(posicion[1])));
+		catch (NumberFormatException e) {//si la segunda posicion no es un numero 
+		    throw new PositionParseException(Messages.INVALID_POSITION.formatted(objWords[0]), new NumberFormatException(Messages.INPUT_STRING.formatted(posicion[1])));
 		}
-		Position pos= new Position(a,b);
-		if(pos.outOfBounds())throw new OffBoardException();
+		Position pos= new Position(a,b);//en otro caso se crea la posicion, pues tiene el formato correcto
+		if(pos.outOfBounds())throw new OffBoardException();//si esta fuera de tablero se manda esta excepcion
 		return pos;
 	}
 }

@@ -8,22 +8,22 @@ import tp1.view.Messages;
 public class CommandGenerator {
 
 	private static final List<Command> availableCommands = Arrays.asList(
+			new LoadCommand(),
+			new SaveCommand(),
+			new AddObjectCommand(),
 			new ActionCommand(),
 	        new UpdateCommand(),
 	        new ResetCommand(),
 	        new HelpCommand(),
-	        new ExitCommand(),
-			new AddObjectCommand());
+	        new ExitCommand());
+			
 	public static Command parse(String[] commandWords) throws CommandParseException{ //recorre todos los comandos, y si coincide con alguno devuelve ese, en caso contrario devuelve null
 		Command result=null;
-		commandWords = java.util.Arrays.stream(commandWords)// con esto se hace minúsculas todas los strings del array
-		        .map(String::toLowerCase)
-		        .toArray(String[]::new);	
 		try {
 		for (Command c: availableCommands) {
 			if(result==null)result=c.parse(commandWords);
 		}
-		if(result==null&&"".equals(commandWords[0]))result=availableCommands.get(1);//si no hay nada en el array se hace update
+		if(result==null&&"".equalsIgnoreCase(commandWords[0]))result=availableCommands.get(4);//si no hay nada en el array se hace update
 		else if(result==null)throw new CommandParseException(Messages.UNKNOWN_COMMAND.formatted(String.join(" ", commandWords)));
 		} catch(CommandParseException exception){
 			throw exception;

@@ -1,7 +1,6 @@
 package tp1.logic.gameobjects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import tp1.logic.*;
@@ -22,12 +21,16 @@ public class Mario extends MovingObject{
 	private static final String MARIO_LEFT=Messages.MARIO_LEFT;
 	private static final String MARIO_STOP=Messages.MARIO_STOP;
 	private String iconoActual; //se guarda el icono 
-	private boolean bigg=true;;
+	private boolean bigg=true;
+	private Position preUpdatePos;
+	private Action preUpdateMov;
 
 	
 	public Mario(GameWorld game, Position pos) {//el constructor del objeto Mario
 		super(game, pos);
 		iconoActual=this.getIcon();
+		preUpdateMov=this.inicioMov();
+		preUpdatePos=pos;
 		actionList=new ActionList();
 		actionListToDo= new ArrayList<>();
 	}
@@ -35,7 +38,8 @@ public class Mario extends MovingObject{
 	public Mario(GameWorld game, Position pos, Action mov) {//el constructor del objeto Mario
 		super(game, pos, mov);
 		iconoActual=this.getIcon();
-		cambiarTamano();//empieza grande
+		preUpdateMov=mov;
+		preUpdatePos=pos;
 		actionList=new ActionList();
 		actionListToDo= new ArrayList<>();
 	}
@@ -44,19 +48,27 @@ public class Mario extends MovingObject{
 		cambiarNombres(NAME,SHORTCUT);
 	}
 	
-	int leerTamano(String s) throws ObjectParseException{
+	
+	@Override
+	protected GameObject clonarEspecifico() {
+		Mario mario2=new Mario();
+		mario2.preUpdateMov=this.preUpdateMov;
+		mario2.preUpdatePos=this.preUpdatePos;
+		mario2.iconoActual=this.getIcon();
+		mario2.bigg=this.bigg;
+		mario2.actionList=new ActionList();
+		mario2.actionListToDo= new ArrayList<>();		
+		this.guardarMov(mario2);
+		return mario2;
+	}
+
+	
+	
+	int leerTamano(String s, String[] objWords) throws ObjectParseException{//se lee el tamano que representa el string leido
 		int tam;
-		s=s.toLowerCase();
-		switch(s) {
-		case BIG:tam=1;; break;
-		case BIG_SHORTCUT: tam=1; break;
-		case SMALL_SHORTCUT: tam=0; break;
-		case SMALL: tam=0; break;
-		default:{
-			tam=-1;
-			throw new ObjectParseException(String.format(Messages.INVALID_MARIO_SIZE, s));
-			}
-		}
+		if(s.equalsIgnoreCase(BIG)||s.equalsIgnoreCase(BIG_SHORTCUT))tam=1;
+		else if(s.equalsIgnoreCase(SMALL)||s.equalsIgnoreCase(SMALL_SHORTCUT))tam=0;
+		else throw new ObjectParseException(Messages.INVALID_MARIO_SIZE.formatted(String.join(" ", objWords)));//se lanza si el tamano leido es incorrecto
 		return tam;
 	}
 
@@ -64,24 +76,22 @@ public class Mario extends MovingObject{
 	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException, ActionParseException{//devuelve el nuevo Mario en caso de que el formato sea correcto, en otro caso devuelve null, 
 		//además, el nuevo mario creado es el que se guarda en game, es decir, es el que se controla  con las acciones, el otro mario se quedaria haciendo el movimiento automatico como un objeto más
 		Mario c=null;
-		if(matchCommandName(objWords[2])) {
-			if(objWords.length==4||objWords.length==5){
-				Action mov=Action.devuelveMov(objWords[3]);
-				if(mov!=null&&objWords.length==4) {
+		if(matchCommandName(objWords[1])) {//se va comprobando el formato de mario, y si da fallo en algun caso la excepcion se manda en el respectivo metodo
+			if(objWords.length==3||objWords.length==4){
+				Action mov=Action.devuelveMov(objWords[2]);
+				if(objWords.length==3) {
 					c=new Mario(game, pos, mov);
 				}
-				else if(mov!=null&&objWords.length==5) {
-					int n=leerTamano(objWords[4]);
-					if(n!=-1) {
-						c=new Mario(game, pos, mov);
-						if(n==0)c.cambiarTamano();
-					}
+				else if(objWords.length==4) {
+					int n=leerTamano(objWords[3], objWords);
+					c=new Mario(game, pos, mov);
+					if(n==0)c.cambiarTamano();
 				}	
 			}
-			else if(objWords.length==3){
+			else if(objWords.length==2){//si no se dice nada se crea el mario por defecto
 				c=new Mario(game, pos);
 			}
-			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", objWords))));//si hay mas palabras de las necesarias, se manda esta excepcion
 			game.actualizarMario(c);
 		}
 		return c;
@@ -119,6 +129,11 @@ public class Mario extends MovingObject{
 		return true; //siempre interactúa
 	}
 	
+	private String tamanoToString() {//devuelve el string que representa el tamano
+		if(bigg)return BIG;
+		else return SMALL;
+	}
+	
 	@Override
 	public boolean receiveInteraction(ExitDoor obj) {//comprueba si mario ha interactuado con la puerta, si es asi, se llama a marioExited de game
 		game.marioExited();
@@ -136,7 +151,18 @@ public class Mario extends MovingObject{
 		return true;
 	}
 	
+	private boolean sigueIgual() {
+		return compararMov(this.preUpdateMov)&&super.isInPosition(preUpdatePos);
+	}
 	
+	@Override
+	protected void leerEspecifico(List<String> lista) {// lee lo especifico del mario
+		lista.add(NAME);
+		lista.add(" ");
+		lista.add(devuelveAction());
+		lista.add(" ");
+		lista.add(tamanoToString());
+	}
 	
 	
 	@Override
@@ -172,21 +198,16 @@ public class Mario extends MovingObject{
 		}
 	}
 	
-	
 	@Override
 	public void update() {//aqui se realizan todas las acciones de mario, ademas de comprobar las interacciones de mario despues de cada movimiento
 		this.listaDeAcciones();
-		guardarPosPreUpdate();
-		guardarPreUpdateMov();
+		preUpdatePos=this.getPosition();//es absolutamente necesario, porque los atributos de preupdatepos y preupdatemov, por logica del juego no los puedo poner en otro sitio que no sea en mario, pues es el unico que los necesita, asi que son necesarios ambos getters
+		preUpdateMov=this.getMov();
 		for(int i=0; i<actionListToDo.size();++i) {
 			switch(actionListToDo.get(i)) {
-			case LEFT: {
-				this.LEFT();
-			}
+			case LEFT: this.LEFT();
 			break;
-			case RIGHT:{
-				this.RIGHT();
-			}
+			case RIGHT:this.RIGHT();
 			break;
 			case UP: this.UP(); 
 			break;
@@ -199,12 +220,13 @@ public class Mario extends MovingObject{
 			}
 		game.doInteractionsFrom(this);
 		}
-		if((this.sigueIgual()&&!compararMov(Action.STOP))||actionListToDo.isEmpty()) {//si el resultado de todas las acciones es que se queda en la misma posicion y no ha cambiado su direccion de movimiento, se ejecuta el movimiento automatica. solo hace el movimiento automatico no esta parado
+		if((sigueIgual()&&!compararMov(Action.STOP))||actionListToDo.isEmpty()) {//si el resultado de todas las acciones es que se queda en la misma posicion y no ha cambiado su direccion de movimiento, se ejecuta el movimiento automatica. solo hace el movimiento automatico no esta parado
 			movimientoAutomatico();
 			game.doInteractionsFrom(this);
 		}
 		if(compararMov(Action.DOWN)||compararMov(Action.UP))iconToAction();//solo se hace iconToAction si action es UP o DOWN
 		actionListToDo.clear();//reiniciamos la lista
+		
 	}
 	
 	@Override
@@ -218,12 +240,12 @@ public class Mario extends MovingObject{
 	}
 	
 	private void moverArriba() {//se mueve hacia arriba y cambia el action
-		arriba();
+		setPosition(getPosition().devolverArriba());
 	}
 	
 	@Override
 	protected void moverAbajo() {//sobreescrito porque para el resto de movingObjects no queremos que cambie su movimiento a down
-		abajo();
+		setPosition(getPosition().devolverAbajo());;
 		cambiarMov(Action.DOWN);
 	}
 	
@@ -238,9 +260,12 @@ public class Mario extends MovingObject{
 	}
 	
 	@Override
-	protected void morir() {//se muere y avisa a game de que esta muerto
+	protected void morir(){//se muere y avisa a game de que esta muerto
+		try {
 		dead();
 		game.marioHaMuerto();
+		}catch(GameLoadException e) {
+		}
 	}
 	
 	private void cambiarTamano() {//cambia el tamano
@@ -256,7 +281,7 @@ public class Mario extends MovingObject{
 		}
 		
 		if(abajoFueraDeTablero()) {
-			morir();
+			this.morir();
 		}
 		else if(!puedoAbajo()&&!isFalling())this.STOP();
 	}

@@ -51,26 +51,31 @@ public class Messages {
 	// Errores de commandos:
 	public static final String COMMAND_PARAMETERS_MISSING = "Missing parameters";
 	public static final String COMMAND_INCORRECT_PARAMETER_NUMBER = "Incorrect parameter number";
-	public static final String UNKNOWN_ACTION = "Unknown action: %s";
-	public static final String ILLEGAL_ACTION = "Illegal action: %s";
-	public static final String INVALID_COMMAND = "Invalid command: %s";
-	public static final String INVALID_POSITION = "Invalid position: %s";
-	public static final String INVALID_OBJECT_POSITION = "Invalid object position: %s";
+	public static final String UNKNOWN_ACTION = "Unknown action: \"%s\"";
+	public static final String ILLEGAL_ACTION = "Illegal action: \"%s\"";
+	public static final String INVALID_COMMAND = "Invalid command: \"%s\"";
+	public static final String INVALID_POSITION = "Invalid position: \"%s\"";
+	public static final String INVALID_OBJECT_POSITION = "Invalid object position: \"%s\"";
 	public static final String INVALID_COMMAND_PARAMETERS = "Invalid command parameters";
 	public static final String ERROR_COMMAND_EXECUTE = "Command execute problem";
-	public static final String INPUT_STRING= "For input string: %s";
-	public static final String POSITION_OUT_BOUNDS= "Object position is off board: %s";
+	public static final String INPUT_STRING= "For input string: \"%s\"";
+	public static final String POSITION_OUT_BOUNDS= "Object position is off board: \"%s\"";
 	public static final String UNKNOWN_GAME_OBJECT= "Unknown game object: \"%s\"";
 	public static final String ACTION_INCORRECT_PARAMETER_NUMBER = "Incorrect 'action command', because the action list is empty (all actions are unknown).";
-	public static final String UNKNOWN_DIRECTION = "Unknown moving object direction: %s";
-	public static final String INVALID_DIRECTION = "Invalid moving object direction: %s";
+	public static final String UNKNOWN_DIRECTION = "Unknown moving object direction: \"%s\"";
+	public static final String INVALID_DIRECTION = "Invalid moving object direction: \"%s\"";
 	public static final String INVALID_BOX_STATUS = "Invalid Box status: \"%s\"";
 	public static final String INVALID_MARIO_SIZE = "Invalid Mario size: \"%s\"";
 	public static final String PARSE_INCORRECT_PARAMETER_NUMBER = "Object parse error, too much args: \"%s\"";
-	
-	
-	
+	public static final String SAVE_ERROR= "Unable to save game configuration from file: \"%s\"";
+	public static final String SAVE_CORRECT="Game saved correctly in: \"%s\"";
+	public static final String UNABLE_LOAD="Unable to load game configuration from file: \"%s\"";
+	public static final String FILE_NOT_FOUND="File not found: \"%s\"";
+	public static final String INVALID_CONFIGURATION="Invalid file \"%s\" configuration";
 	public static final String HELP_AVAILABLE_COMMANDS = "Available commands:";
+	public static final String INVALID_GAME_STATUS="Invalid game status: \"%s\"";
+	public static final String NAME_FILE= "\"%s\" (El sistema no puede encontrar el archivo especificado)";
+	
 	@Deprecated
 	/* @formatter:off */
 	public static final String[] HELP_LINES = new String[] { HELP_AVAILABLE_COMMANDS,
@@ -122,7 +127,17 @@ public class Messages {
     public static final String COMMAND_ADD_OBJECT_HELP = """
                                                          <object_description>: adds to the board the object given by object_description.
                                                          <object_description> = (row,col) objName [dir [BIG|SMALL]]. Ej. (12,3) Mario LEFT SMALL""";
-    		
+    //SAVE
+    public static final String COMMAND_SAVE_NAME="save";
+    public static final String COMMAND_SAVE_SHORTCUT="s";
+    public static final String COMMAND_SAVE_DETAILS="[s]ave <fileName>";
+    public static final String COMMAND_SAVE_HELP="save the actual configuration in text file <fileName>";
+
+  //LOAD
+    public static final String COMMAND_LOAD_NAME="load";
+    public static final String COMMAND_LOAD_SHORTCUT="l";
+    public static final String COMMAND_LOAD_DETAILS="[l]oad <fileName>";
+    public static final String COMMAND_LOAD_HELP="load the game configuration from text file <fileName>";
     
     
     
@@ -139,32 +154,35 @@ public class Messages {
 	public static final String EMPTY_BOX = MyStringUtils.repeat("0",ConsoleView.CELL_SIZE);
 	
 	//GameObjectFactory
-	public static final String MARIO_NAME = "mario";
+	public static final String MARIO_NAME = "Mario";
 	public static final String MARIO_SHORTCUT = "m";
-	public static final String LEFT = "left";
+	public static final String LEFT = "LEFT";
 	public static final String LEFT_SHORTCUT = "l";
-	public static final String RIGHT = "right";
-	public static final String UP = "up";
+	public static final String RIGHT = "RIGHT";
+	public static final String UP = "UP";
 	public static final String UP_SHORTCUT = "u";
 	public static final String RIGHT_SHORTCUT = "r";
-	public static final String DOWN = "down";
+	public static final String DOWN = "DOWN";
 	public static final String DOWN_SHORTCUT = "d";
-	public static final String STOP = "stop";
+	public static final String STOP = "STOP";
 	public static final String STOP_SHORTCUT = "s";
-	public static final String BIG = "big";
+	public static final String BIG = "BIG";
 	public static final String BIG_SHORTCUT = "b";
-	public static final String SMALL = "small";
+	public static final String SMALL = "SMALL";
 	public static final String SMALL_SHORTCUT = "s";
-	public static final String GOOMBA_NAME = "goomba";
-	public static final String MUSHROOM_NAME= "mushroom";
+	public static final String GOOMBA_NAME = "Goomba";
+	public static final String MUSHROOM_NAME= "Mushroom";
 	public static final String MUSHROOM_SHORTCUT= "mu";
 	public static final String GOOMBA_SHORTCUT = "g";
-	public static final String EXITDOOR_NAME = "exitdoor";
+	public static final String EXITDOOR_NAME = "ExitDoor";
 	public static final String EXITDOOR_SHORTCUT = "ed";
-	public static final String LAND_NAME = "land";
+	public static final String LAND_NAME = "Land";
 	public static final String LAND_SHORTCUT = "l";
-	public static final String BOX_NAME= "box";
+	public static final String BOX_NAME= "Box";
 	public static final String BOX_SHORTCUT="b";
-
+	public static final String BOX_FULL="FULL";
+	public static final String BOX_FULL_SHORTCUT="f";
+	public static final String BOX_EMPTY="EMPTY";
+	public static final String BOX_EMPTY_SHORTCUT="e";
 
 }

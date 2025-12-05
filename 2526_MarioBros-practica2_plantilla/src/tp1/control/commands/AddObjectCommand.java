@@ -35,13 +35,13 @@ public class AddObjectCommand extends AbstractCommand{
 	    		if(game.addObject(commandWords2)) {//true si el objecto se ha leido correctamente
 	    		view.showGame();
 	    	}
-	    	else {
-	    		throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, new ObjectParseException(Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", commandWords2))));//si el objecto es incorrecto
+	    	else {//si el objecto es incorrecto se lanza esta excepcion
+	    		throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, new GameParseException(Messages.UNKNOWN_GAME_OBJECT.formatted(String.join(" ", commandWords2))));
 	    	}	
-	    	}catch(OffBoardException e) {
+	    	}catch(OffBoardException e) {//la posicion esta fuera de tablero
 				throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 			}
-	    	catch(GameParseException e) {
+	    	catch(GameParseException e) {//aqui se engloba cualquier problema con el formato de los objetos, demasiados argumentos, argumento propio de cada objeto incorrecto,etc.
 				throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, e);
 	    	}
 	    }

@@ -28,7 +28,7 @@ public class ResetCommand extends AbstractCommand{
 		Command c=null;
 		int nLevel2=Integer.MIN_VALUE;
 		try {
-			if(matchCommandName(commandWords[0])) {
+			if(matchCommandName(commandWords[0])) {//si se ha puesto reset
 				if (commandWords.length == 2) {//true si hay algo despues de reset
 					String valor = commandWords[1];
 					if (valor.matches("-?\\d+")) {//si es un numero
@@ -36,20 +36,21 @@ public class ResetCommand extends AbstractCommand{
 						c=new ResetCommand(nLevel2);
 					}
 					else {
-						throw new NumberFormatException(String.format(Messages.INPUT_STRING, commandWords[1]));
+						throw new NumberFormatException(String.format(Messages.INPUT_STRING, commandWords[1]));//se lanza la excepcion con el input que ha dado el fallo
 						}
 				}
 				else if(commandWords.length==1)c=new ResetCommand(nLevel2);
 				else throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 			}
-		}catch(NumberFormatException nfe) {
+		}catch(NumberFormatException nfe) {//si no parsea el numero se lanza esta excepcion
 			throw new CommandParseException(Messages.LEVEL_NOT_A_NUMBER_ERROR.formatted(commandWords[1]), nfe);	
 		}
 		return c;
 	}
 	@Override
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{//ejecuta reset
-		if(nLevel>=-1&&nLevel<=2) {//se tienen en cuenta todos los enteros de [-1,2]
+		try{
+			if(nLevel>=-1&&nLevel<=2) {//se tienen en cuenta todos los enteros de [-1,2]
 		    game.reset(nLevel);
 		    view.showGame();
 		}
@@ -61,6 +62,9 @@ public class ResetCommand extends AbstractCommand{
 				game.reset();
 				view.showGame();
 			}
+		}
+		}catch(GameLoadException e) {//no va a saltar ningun error porque las configuraciones estan bien hechas, pero hay que ponerlo porque al usar el metodo de load es necesario
+			throw new CommandExecuteException(Messages.UNABLE_LOAD.formatted(nLevel), e);
 		}
 	}	
 }

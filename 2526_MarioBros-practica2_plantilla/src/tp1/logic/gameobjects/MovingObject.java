@@ -1,14 +1,11 @@
 package tp1.logic.gameobjects;
-import tp1.exceptions.*;
 
 import tp1.logic.*;
-import tp1.view.Messages;;
 
 
 public abstract class MovingObject extends GameObject{
 	
 	private Action mov;//Enum p�blico de game con el que guardar el estado de Movimiento actual
-	private Action preUpdateMov;
 	
 	public MovingObject(GameWorld game, Position pos) {//constructor de movingobject
 		super(game, pos);
@@ -20,7 +17,43 @@ public abstract class MovingObject extends GameObject{
 		this.mov=mov2;
 	}
 	
+	boolean puedoDerecha() {//true si puedo moverme a la derecha
+		return !getPosition().devolverDerecha().outOfBounds()&&!game.isSolid(getPosition().devolverDerecha());
+	}
+	
+	boolean abajoFueraDeTablero() {//true si abajo esta fuera de tablero
+		return getPosition().devolverAbajo().outOfBounds();
+	}
+	
+	boolean puedoIzquierda() {//true si puedo moverme a la izquierda
+		return !getPosition().devolverIzquierda().outOfBounds()&&!game.isSolid(getPosition().devolverIzquierda());
+	}
+	
+	boolean puedoAbajo() {//true si puedo moverme abajo
+		return !getPosition().devolverAbajo().outOfBounds()&&!game.isSolid(getPosition().devolverAbajo());
+	}
+	
+	boolean puedoArriba() {//true si puedo moverme arriba
+		return !getPosition().devolverArriba().outOfBounds()&&!game.isSolid(getPosition().devolverArriba());
+	}
+	
+	boolean puedoArribaDerecha() {//true si puedo moverme arriba a la derecha
+		return !getPosition().devolverDerecha().devolverArriba().outOfBounds()&&!game.isSolid(getPosition().devolverDerecha().devolverArriba());
+	}
+	
+	boolean puedoArribaIzquierda() {//true si puedo moverme arriba a la izquierda
+		return !getPosition().devolverIzquierda().devolverArriba().outOfBounds()&&!game.isSolid(getPosition().devolverIzquierda().devolverArriba());
+	}
+	
+	boolean puedoArribaArriba() {//true si puedo moverme dos casillas arriba
+		return !getPosition().devolverArriba().devolverArriba().outOfBounds()&&!game.isSolid(getPosition().devolverArriba().devolverArriba());
+	}
+	
 	public MovingObject() {//constructor vacio, para addobjectcommand, es el que se llama por defecto en sus clases hijas
+	}
+	
+	Action getMov() {
+		return this.mov;
 	}
 	
 	protected abstract Action inicioMov();//cada uno tiene un movimiento distinto
@@ -33,36 +66,35 @@ public abstract class MovingObject extends GameObject{
 	boolean isUp() {//true si se esta moviendo hacia arriba
 		return mov==Action.UP;
 	}
-		
 	
 	boolean compararMov(Action mov2) {//compara el atributo con el movimiento actual
 		return mov2==this.mov;
+	}
+	
+	protected String devuelveAction() {
+		return Action.devuelveString(mov);
 	}
 	
 	void cambiarMov(Action mov2) {//cambia el movimiento actual por el atributo
 		this.mov=mov2;
 	}
 
-	@Override
-	boolean sigueIgual() {//true si sigue igual
-		return this.mov==this.preUpdateMov&&super.sigueIgual();
-	}
-	
-	void guardarPreUpdateMov() {//guarda el movimiento previo al update
-		this.preUpdateMov=this.mov;
-	}
 
 	boolean isFalling() { //devuelve true si esta cayendo
 		return mov==Action.DOWN;
 	}
 	
+	protected void guardarMov(MovingObject e) {
+		e.mov=this.mov;
+	}
+	
 	private void moverIzquierda() {//se mueve a la izquierda
-		izquierda();
+		setPosition(getPosition().devolverIzquierda());
 		cambiarMov(Action.LEFT);
 	}
 	
 	protected void moverAbajo() {//se mueve abajo
-		abajo();
+		setPosition(getPosition().devolverAbajo());
 	}
 	
 	protected void LEFT() {//toda la logica para moverse hacia la izquierda, si no hay nada, se mueve normal, y si hay algo y tiene el icono de movimiento hacia la izquierda, se cambia al icono de movimiento hacia la derecha. Ademas, se tiene en cuenta la cabeza cuando es grande a la hora de moverse
@@ -74,7 +106,7 @@ public abstract class MovingObject extends GameObject{
 	
 	
 	private void moverDerecha() {//se mueve a la derecha
-		derecha();
+		setPosition(getPosition().devolverDerecha());
 		cambiarMov(Action.RIGHT);
 	}
 	
@@ -87,7 +119,7 @@ public abstract class MovingObject extends GameObject{
 		}
 	}
 	
-	protected void morir() {//se muere el objeto y se borra de la lista
+	protected void morir(){//se muere el objeto y se borra de la lista
 		dead();
 		game.borrarObject(this);
 	}

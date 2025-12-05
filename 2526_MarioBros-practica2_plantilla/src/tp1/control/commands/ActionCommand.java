@@ -29,16 +29,15 @@ public class ActionCommand extends AbstractCommand{
 		else if(matchCommandName(commandWords[0]))throw new CommandParseException(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 		return c;
 	}
-	
     
 	public void execute(GameModel game, GameView view) throws CommandExecuteException{ //ejecuta action
 		//durante todo el array va añadiendo acciones, y si alguna no coincide se muestra unknown action
 			try {
-				Action.leerAcciones(commandWords2, game);
+				Action.leerAcciones(commandWords2, game);//a traves de un metodo estatico de Action se leen todas las acciones.
 			}catch(ActionParseException a) {
-				throw new CommandExecuteException(a.getMessage());
+				throw new CommandExecuteException(Messages.ERROR_COMMAND_EXECUTE, a);//si toda la lista de actions es erronea, se lanza esta excepcion
 			}
-			game.update();
-			if(!game.marioHaPerdido())view.showGame();//solo muestra el juego si el juego no ha terminado
+			game.update();//si todo ha ido bien se hace update
+			view.showGame();//solo muestra el juego si el juego no ha terminado
 		}
 	}

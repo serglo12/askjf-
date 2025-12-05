@@ -1,19 +1,18 @@
 package tp1.logic.gameobjects;
 import tp1.view.Messages;
+
+import java.util.List;
+
 import tp1.exceptions.ObjectParseException;
 import tp1.logic.*;
-
-import java.util.Arrays;
-
-import tp1.exceptions.*;
 
 public class Box extends GameObject{	
 	private static final String NAME=Messages.BOX_NAME;
 	private static final String SHORTCUT=Messages.BOX_SHORTCUT;
-	public static final String BOX_FULL="full";
-	public static final String BOX_FULL_SHORTCUT="f";
-	public static final String BOX_EMPTY="empty";
-	public static final String BOX_EMPTY_SHORTCUT="e";
+	private static final String BOX_FULL=Messages.BOX_FULL;
+	private static final String BOX_FULL_SHORTCUT=Messages.BOX_FULL_SHORTCUT;
+	private static final String BOX_EMPTY=Messages.BOX_EMPTY;
+	private static final String BOX_EMPTY_SHORTCUT=Messages.BOX_EMPTY_SHORTCUT;
 	private boolean full;
 	private Position mushroomPos;
 	
@@ -25,6 +24,12 @@ public class Box extends GameObject{
 	
 	public Box() { //constructor vacio de caja, se llama solo al constructor vacio de gameobject
 		cambiarNombres(NAME,SHORTCUT);
+	}
+	@Override
+	protected GameObject clonarEspecifico() {
+		Box e=new Box();
+		e.full=this.full;
+		return e;
 	}
 
 	@Override
@@ -53,17 +58,18 @@ public class Box extends GameObject{
 	
 	int devuelveFull(String mov, String objWords[]) throws ObjectParseException{//lee el full de un string
 		int full;
-		switch(mov) {
-		case BOX_FULL:full=1;; break;
-		case BOX_FULL_SHORTCUT: full=1; break;
-		case BOX_EMPTY_SHORTCUT: full=0; break;
-		case BOX_EMPTY: full=0; break;
-		default: {
+		if(mov.equalsIgnoreCase(BOX_FULL)||mov.equalsIgnoreCase(BOX_FULL_SHORTCUT))full=1;
+		else if(mov.equalsIgnoreCase(BOX_EMPTY)||mov.equalsIgnoreCase(BOX_EMPTY_SHORTCUT))full=0;
+		else {
 			full=-1; 
-			throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+			throw new ObjectParseException(Messages.INVALID_BOX_STATUS.formatted((String.join(" ", objWords))));//se lanza esta excepcion en caso de que no sea correcto el formato
 			}
-		}
 		return full;
+	}
+	
+	private String estadoToString() {//devuelve el string del estado segun este
+		if(full)return BOX_FULL;
+		else return BOX_EMPTY;
 	}
 	
 	@Override
@@ -74,9 +80,9 @@ public class Box extends GameObject{
 	@Override
 	public GameObject parse (String objWords[], GameWorld game, Position pos) throws ObjectParseException{ //si coincide con el nombre o shortcut, y despues el formato es correcto(o no hay nada) se crea la caja correcta, en otro caso devuelve null
 		Box c=null;
-		if(matchCommandName(objWords[2])) {
-			if(objWords.length==4){
-				int num=devuelveFull(objWords[3], objWords);
+		if(matchCommandName(objWords[1])) {//va probando a ver si es correcto el formato
+			if(objWords.length==3){
+				int num=devuelveFull(objWords[2], objWords);
 				if(num!=-1) {
 					c=new Box(game, pos);
 					if(num==1)c.full=true;
@@ -84,12 +90,17 @@ public class Box extends GameObject{
 				}
 			}
 			
-			else if(objWords.length==3)c=new Box(game, pos);
-			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", Arrays.copyOfRange(objWords, 1, objWords.length)))));
+			else if(objWords.length==2)c=new Box(game, pos);
+			else throw new ObjectParseException(Messages.PARSE_INCORRECT_PARAMETER_NUMBER.formatted((String.join(" ", objWords))));//si hay mas palabras de las necesarias, se manda esta excepcion
 
 		}
 		return c;
 	}
 	
-	
+	protected void leerEspecifico(List<String> lista) {//anade lo especifico de cada objeto a la lista
+		lista.add(NAME);
+		lista.add(" ");
+		lista.add(estadoToString());
+	}
 }
+	
